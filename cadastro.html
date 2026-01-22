@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastro - FutEscola</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="cadastro" class="screen" style="display:block">
+        <h2>Cadastro</h2>
+        <a class="logocadastro">
+            <img src="images/Logo_do_TCC.png" alt="Logo do site">
+        </a>
+
+        <input id="c_user" type="text" placeholder="Usuário">
+        <input id="c_email" type="email" placeholder="Email">
+        <input id="c_pass" type="password" placeholder="Senha">
+
+        <button class="btn" onclick="cadastrar()">CADASTRAR</button>
+
+        <p style="text-align:center;margin-top:15px;">
+            <a href="index.html" onclick="showScreen('login')">Já tem conta? Entrar</a>
+        </p>
+    </div>
+    
+<script src="js/script.js"></script>
+</body>
+</html>

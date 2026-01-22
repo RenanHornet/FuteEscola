@@ -1,0 +1,183 @@
+:root {
+    --card: #ffffff;
+    --text: #0f3264;
+}
+
+
+body {
+        margin: 0;
+        font-family: "Poppins", Arial, sans-serif;
+        background: #e9eef3;
+        transition: .3s;
+    }
+
+    /* NAVBAR */
+    .navbar {
+        background: #0f3264;
+        padding: 30px;
+        display: none; /* ✅ NAVBAR começa OCULTA */
+        justify-content: center;
+        gap: 30px;
+        transition: .3s;
+    }
+
+    .navbar a {
+        color: #fff;
+        font-size: 23px;
+        text-decoration: none;
+        transition: .2s;
+        padding: 8px 15px;
+        border-radius: 6px;
+    }
+
+    .navbar a:hover {
+        background: #32cd32; /* ✅ verde ao passar o mouse */
+        color: white;
+        transform: translateY(-2px);
+    }
+    .logonav img {
+        height: 40px;
+    }
+
+    /* TELAS */
+    .screen {
+        display: none;
+        width: 600px;
+        padding: 50px;
+        background: var(--card);
+        margin: 70px auto;
+        border-radius: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        animation: fade .5s ease;
+    }
+      .score { /* Placar da partida */
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        font-size: 50px;
+        margin-top: 20px;
+        font-weight: 700;
+        color: var(--text);
+    }
+    .grid { /* Layout chaveamento */
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+    }
+     .match-box {
+        background: #f7faff;
+        padding: 20px;
+        border-radius: 15px;
+        border: 2px solid var(--text);
+        text-align: center;
+        font-weight: bold;
+        transition: .2s;
+    }
+
+    .match-box:hover {
+        transform: scale(1.05);
+    }
+      /* Ranking */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        color: var(--text);
+    }
+    table th {
+        background: var(--text);
+        color: #0f3264;
+        padding: 12px;
+    }
+
+    table td {
+        padding: 12px;
+        border-bottom: 1px solid #777;
+    }
+
+    @keyframes fade {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .active {
+        display: block !important;
+    }
+    
+
+    h2 {
+        text-align: center;
+        color: #0f3264;
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
+    .logologin img { 
+        height: 140px;
+        justify-content: center;
+        align-items: center;
+        
+
+    }
+    /* Frase da tela de login */
+.frase-login {
+    text-align: center;
+    font-size: 15px;
+    color: #555;
+    margin: 10px 0 25px 0;
+    line-height: 1.4;
+}
+
+.frase-login strong {
+    display: block;
+    font-size: 18px;
+    color: #0f3264;
+    margin-bottom: 4px;
+}
+
+    .logocadastro img {
+         height: 140px;
+        justify-content: center;
+        align-items: center;
+    }
+       
+    
+
+    /* Inputs */
+    input {
+        width: 100%;
+        padding: 14px;
+        margin: 10px 0;
+        border-radius: 12px;
+        border: 2px solid #d4d4d4;
+        font-size: 16px;
+        transition: .2s;
+    }
+    input:focus {
+        border-color: #0f3264;
+        outline: none;
+        box-shadow: 0 0 8px rgba(15,50,100,0.3);
+    }
+
+    /* Botões */
+    .btn {
+        width: 100%;
+        background: #78C800;
+        padding: 14px;
+        border: none;
+        border-radius: 30px;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 25px;
+        transition: .2s;
+        text-align: center;
+    }
+    .btn:hover {
+        transform: scale(1.03);
+        opacity: .95;
+    }
+
+    .btn-orange {
+        background: #ff8c00 !important;
+    }

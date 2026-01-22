@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Home - FutEscola</title>
+<title>Partida</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -15,15 +15,19 @@
         <a href="index.html">Sair</a>
     </div>
 
-    <div id="home" class="screen" style="display: block;">
-        <h2>FutEscola</h2>
-        <a class="logologin">
-            <img src="images/Logo_do_TCC.png" alt="Logo do site">
-        </a>
-        <p style="text-align: center;">
-            <strong>Uma proposta mais moderna para seu interclasse!</strong>
-        </p>
+    <div id="partida" class="screen" style="display:block">
+    <h2>Partida ao Vivo</h2>
+
+    <div class="score">
+        <span id="scoreA">0</span>
+        <span>X</span>
+        <span id="scoreB">0</span>
     </div>
 
+        <button class="btn" onclick="addA()">+1 Time A</button>
+        <button class="btn" onclick="addB()">+1 Time B</button>
+        <button class="btn btn-orange" onclick="zerarPlacar()">Zerar Placar</button>
+    </div>
+<script src="js/script.js"></script>   
 </body>
 </html>
