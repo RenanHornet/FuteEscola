@@ -1,0 +1,18 @@
+CREATE DATABASE FuteEscola;
+USE FuteEscola;
+
+CREATE TABLE Cadastros (
+ID_Cadastro INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+Usuario VARCHAR(280) NOT NULL,
+Email VARCHAR(280) NOT NULL,
+Senha VARCHAR(300) NOT NULL,
+Ativo BOOLEAN NOT NULL DEFAULT TRUE,
+Data_Cadastro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+
+);
+
+DROP TABLE Cadastros;
+SELECT * from Cadastros;
+
+INSERT INTO Cadastros (Usuario, Email, Senha, Ativo)
+VALUES ('Lucas', 'Lucas@gmail.com', '1234', TRUE);
