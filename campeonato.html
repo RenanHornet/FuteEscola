@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Campeonato - FutEscola</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="navbar" style="display:flex">
+        <a href="home.html">Home</a>
+        <a href="chaveamento.html">Chaveamento</a>
+        <a href="partida.html">Partida</a>
+        <a href="ranking.html">Ranking</a>
+        <a href="index.html">Sair</a>
+    </div>
+    <div id = campeonato class="screen active">
+        <h2>Novo Campeonato</h2>
+        <div class="formato">
+            <p> <strong>Escolha o formato do campeonato:</strong></p>
+            <div>
+                <button class="btn" onclick="selecionarFormato(4)">
+                    Campeonato Simples (4 times)
+                </button>
+                <button class="btn" onclick="selecionarFormato(8)">
+                    Por grupo (8 times)
+                </button>
+            </div>    
+        </div>
+
+
+    </div>
+</body>
+</html>

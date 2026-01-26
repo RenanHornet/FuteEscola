@@ -55,3 +55,72 @@ function zerarPlacar() {
     document.getElementById("scoreA").textContent = 0;
     document.getElementById("scoreB").textContent = 0;
 }
+
+function selecionarFormato(qtdTimes) {
+    if (qtdTimes === 4) {
+        window.location.href = "times4.html";
+    } else {
+        window.location.href = "times8.html";
+    }
+}
+
+function salvarTimes4(){
+    const times = [];
+
+    document.querySelectorAll(".card-time").forEach((card, index) => {
+        const inputs = card.querySelectorAll("input");
+
+        const nomeTime = inputs[0].value;
+        const jogadores = [];
+
+        for(let i=1; i<inputs.length; i++){
+            if(inputs[i].value !== ""){
+                jogadores.push(inputs[i].value);
+            }
+        }
+
+        times.push({
+            time: nomeTime,
+            jogadores: jogadores
+        });
+    });
+
+    // salva no navegador
+    localStorage.setItem("times4", JSON.stringify(times));
+
+    // redireciona para chaveamento
+    window.location.href = "chaveamento.html";
+}
+
+function gerarChaveamento() {
+    const container = document.getElementById("chaves");
+    container.innerHTML = "";
+
+    const times = JSON.parse(localStorage.getItem("times4"));
+
+    if (!times || times.length < 4) {
+        alert("Cadastre 4 times primeiro!");
+        return;
+    }
+
+    // Semifinais
+    container.innerHTML += `
+        <div class="match-box">
+            ${times[0].time} <br> vs <br> ${times[1].time}
+        </div>
+    `;
+
+    container.innerHTML += `
+        <div class="match-box">
+            ${times[2].time} <br> vs <br> ${times[3].time}
+        </div>
+    `;
+
+    // Final (placeholder)
+    container.innerHTML += `
+        <div class="match-box">
+            Final<br>
+            Vencedor Jogo 1 vs Vencedor Jogo 2
+        </div>
+    `;
+}
