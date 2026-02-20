@@ -108,23 +108,49 @@ function salvarTimes4(){
 
 /*Função que gera o chaveamento*/ 
 function gerarChaveamento(){
-    const times = JSON.parse(localStorage.getItem("times4"));
+    const container = document.getElementById("chaves");
+    container.innerHTML = ""; 
+
+    let times = JSON.parse(localStorage.getItem("times4"));
 
     if(!times || times.length < 4){
-        alert("Nenhum time encontrado!");
+        alert("cCadastre os 4 times para gerar o chaveamento!");
         return;
     }
 
-    const chavesDiv = document.getElementById("chaves");
-    chavesDiv.innerHTML = ""; // limpa antes
+    /*Embaralhar times*/
+    times.sort(() => Math.random() - 0.5);
 
-    // semifinais
-    const semi1 = `${times[0].time} vs ${times[1].time}`;
-    const semi2 = `${times[2].time} vs ${times[3].time}`;
+    /*Gerar chaveamento*/
+    const jogo1 = [times[0], times[1]];
+    const jogo2 = [times[2], times[3]];
 
-    chavesDiv.innerHTML = `
-        <div class="match-box">${semi1}</div>
-        <div class="match-box">${semi2}</div>
-        <div class="match-box">Final</div>
-    `;
+    criarJogo(container, jogo1);
+    criarJogo(container, jogo2);
 }
+
+/*Cria os jogos no container do chaveamento*/ 
+function criarJogo(container, jogo){
+    const div = document.createElement("div");
+    div.classList.add("match-box");
+    div.innerText = `${jogo[0].time} vs ${jogo[1].time}`;
+
+    /*salva o jogo clicado*/
+    div.onclick = () => {
+        localStorage.setItem("jogoAtual", JSON.stringify(jogo));
+        window.location.href = "partida.html";
+    };
+    container.appendChild(div);
+}
+
+/*Função que carrega os times no placar da partida*/ 
+function carregarPartida() {
+    const jogo = JSON.parse(localStorage.getItem("jogoAtual"));
+
+    if(!jogo) return;
+
+    document.getElementById("timeA").textContent = jogo[0].time;
+    document.getElementById("timeB").textContent = jogo[1].time;
+}
+/*Abre a partida automaticamente*/
+window.onload = carregarPartida; 
