@@ -16,3 +16,83 @@ SELECT * from Cadastros;
 
 INSERT INTO Cadastros (Usuario, Email, Senha, Ativo)
 VALUES ('Lucas', 'Lucas@gmail.com', '1234', TRUE);
+
+
+CREATE TABLE escolas (
+    id_escola INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    cidade VARCHAR(100),
+    estado CHAR(2)
+);
+
+
+CREATE TABLE campeonatos (
+    id_campeonato INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    data_inicio DATE NOT NULL,
+    data_fim DATE NOT NULL,
+    status ENUM('em_andamento', 'finalizado', 'planejado') DEFAULT 'planejado',
+    id_escola INT,
+    FOREIGN KEY (id_escola) REFERENCES escolas(id_escola)
+);
+
+
+CREATE TABLE times (
+    id_time INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    categoria VARCHAR(50),
+    id_campeonato INT NOT NULL,
+    FOREIGN KEY (id_campeonato) REFERENCES campeonatos(id_campeonato)
+);
+
+
+CREATE TABLE jogadores (
+    id_jogador INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    numero_camisa INT,
+    id_time INT NOT NULL,
+    FOREIGN KEY (id_time) REFERENCES times(id_time)
+);
+
+
+CREATE TABLE partidas (
+    id_partida INT AUTO_INCREMENT PRIMARY KEY,
+    id_campeonato INT NOT NULL,
+    time_casa INT NOT NULL,
+    time_fora INT NOT NULL,
+    gols_casa INT DEFAULT 0,
+    gols_fora INT DEFAULT 0,
+    data_partida DATETIME NOT NULL,
+    status ENUM('agendada', 'em_andamento', 'finalizada') DEFAULT 'agendada',
+    FOREIGN KEY (id_campeonato) REFERENCES campeonatos(id_campeonato),
+    FOREIGN KEY (time_casa) REFERENCES times(id_time),
+    FOREIGN KEY (time_fora) REFERENCES times(id_time)
+);
+
+
+CREATE TABLE chaveamentos (
+    id_chaveamento INT AUTO_INCREMENT PRIMARY KEY,
+    id_campeonato INT NOT NULL,
+    fase ENUM('oitavas', 'quartas', 'semifinal', 'final') NOT NULL,
+    id_partida INT NOT NULL,
+    FOREIGN KEY (id_campeonato) REFERENCES campeonatos(id_campeonato),
+    FOREIGN KEY (id_partida) REFERENCES partidas(id_partida)
+);
+
+
+CREATE TABLE ranking (
+    id_ranking INT AUTO_INCREMENT PRIMARY KEY,
+    id_campeonato INT NOT NULL,
+    id_time INT NOT NULL,
+    pontos INT DEFAULT 0,
+    vitorias INT DEFAULT 0,
+    empates INT DEFAULT 0,
+    derrotas INT DEFAULT 0,
+    gols_pro INT DEFAULT 0,
+    gols_contra INT DEFAULT 0,
+    saldo_gols INT DEFAULT 0,
+    FOREIGN KEY (id_campeonato) REFERENCES campeonatos(id_campeonato),
+    FOREIGN KEY (id_time) REFERENCES times(id_time)
+);
+
