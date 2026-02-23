@@ -6,9 +6,11 @@
 
 body {
         margin: 0;
+        padding:0;
         font-family: "Poppins", Arial, sans-serif;
-        background: #e9eef3;
-        transition: .3s;
+        background: linear-gradient(to bottom, #eeeded, #bebdbd);
+        min-height: 100vh;
+        
     }
 
     /* NAVBAR */
@@ -159,9 +161,9 @@ body {
 
 /* Inputs */
 input {
-    width: 100%;
+    width: 90%;
     padding: 14px;
-    margin: 10px 0;
+    margin: 7px;
     border-radius: 12px;
     border: 2px solid #d4d4d4;
     font-size: 16px;
@@ -175,7 +177,7 @@ input:focus {
 
 /* Botões */
 .btn {
-    width: 100%;
+    width: 70%;
     background: #78C800;
     padding: 14px;
     border: none;
@@ -187,6 +189,7 @@ input:focus {
     margin-top: 25px;
     transition: .2s;
     text-align: center;
+    margin-left: 15%;
 }
 .btn:hover {
     transform: scale(1.03);
@@ -206,4 +209,27 @@ input:focus {
     text-align: center;
     color: var(--text);
     margin-bottom: 15px;
+}
+
+/*pop-up partida*/
+.modal {
+    display: none; /* começa escondido */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6); /* fundo escuro */
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    width: 500px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }

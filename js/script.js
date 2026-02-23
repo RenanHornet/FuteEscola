@@ -135,11 +135,11 @@ function criarJogo(container, jogo){
     div.classList.add("match-box");
     div.innerText = `${jogo[0].time} vs ${jogo[1].time}`;
 
-    /*salva o jogo clicado*/
     div.onclick = () => {
-        localStorage.setItem("jogoAtual", JSON.stringify(jogo));
-        window.location.href = "partida.html";
+        localStorage.setItem("jogoAtual", JSON.stringify(jogo)); 
+        abrirModal(jogo); 
     };
+
     container.appendChild(div);
 }
 
@@ -152,5 +152,49 @@ function carregarPartida() {
     document.getElementById("timeA").textContent = jogo[0].time;
     document.getElementById("timeB").textContent = jogo[1].time;
 }
-/*Abre a partida automaticamente*/
-window.onload = carregarPartida; 
+
+
+/*Modal da partida*/
+
+
+let jogoAtualModal = null;
+
+function abrirModal(jogo){
+    jogoAtualModal = jogo;
+
+    document.getElementById("mTimeA").textContent = jogo[0].time;
+    document.getElementById("mTimeB").textContent = jogo[1].time;
+    document.getElementById("mScoreA").textContent = 0;
+    document.getElementById("mScoreB").textContent = 0;
+
+    document.getElementById("modalPartida").style.display = "flex";
+}
+
+function fecharModal(){
+    document.getElementById("modalPartida").style.display = "none";
+}
+
+function addGol(time){
+    if(time === "A"){
+        let scoreA = document.getElementById("mScoreA");
+        scoreA.textContent = parseInt(scoreA.textContent) + 1;
+    } else {
+        let scoreB = document.getElementById("mScoreB");
+        scoreB.textContent = parseInt(scoreB.textContent) + 1;
+    }
+}
+
+function finalizarPartida(){
+    const resultado = {
+        timeA: jogoAtualModal[0].time,
+        timeB: jogoAtualModal[1].time,
+        golsA: document.getElementById("mScoreA").textContent,
+        golsB: document.getElementById("mScoreB").textContent
+    };
+
+    console.log("Resultado:", resultado);
+
+    alert(`Resultado: ${resultado.timeA} ${resultado.golsA} x ${resultado.golsB} ${resultado.timeB}`);
+
+    fecharModal();
+}

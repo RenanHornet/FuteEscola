@@ -10,7 +10,6 @@
     <div class="navbar" style="display:flex">
         <a href="home.html">Home</a>
         <a href="chaveamento.html">Chaveamento</a>
-        <a href="partida.html">Partida</a>
         <a href="ranking.html">Ranking</a>
         <a href="index.html">Sair</a>
     </div>
@@ -25,6 +24,24 @@
             Gerar Chaveamento
         </button>
     </div>
+    <div id="modalPartida" class="modal">
+    <div class="modal-content">
+        <h2>Registrar Partida</h2>
+
+        <div class="score">
+            <span id="mTimeA">Time A</span>
+            <span id="mScoreA">0</span>
+            <span>X</span>
+            <span id="mScoreB">0</span>
+            <span id="mTimeB">Time B</span>
+        </div>
+
+        <button class="btn" onclick="addGol('A')">+1 Time A</button>
+        <button class="btn" onclick="addGol('B')">+1 Time B</button>
+        <button class="btn" onclick="finalizarPartida()">Finalizar</button>
+        <button class="btn btn-orange" onclick="fecharModal()">Fechar</button>
+    </div>
+</div>
 <script src="js/script.js"></script>    
 </body>
 </html>
