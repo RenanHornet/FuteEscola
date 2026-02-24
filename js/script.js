@@ -22,7 +22,7 @@ function entrar() {
         return;
     }
 
-    showScreen("home"); // ✅ navbar aparece automaticamente
+    showScreen("home"); 
 }
 
 /* Função CADASTRO */
