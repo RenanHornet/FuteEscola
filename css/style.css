@@ -114,17 +114,8 @@ body {
         margin-bottom: 25px;
     }
 
-    .logologin {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-    .logologin img { 
-        height: 140px;
-       
 
-    }
+   
     /* Frase da tela de login */
 .frase-login {
     text-align: center;
