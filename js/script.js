@@ -118,6 +118,10 @@ function gerarChaveamento(){
         return;
     }
 
+    //limpa dados antigos do torneio
+    localStorage.removeItem("resultadosSemi");
+    localStorage.removeItem("finaisGeradas");
+
     /*Embaralhar times*/
     times.sort(() => Math.random() - 0.5);
 
@@ -183,18 +187,91 @@ function addGol(time){
         scoreB.textContent = parseInt(scoreB.textContent) + 1;
     }
 }
-
+/*função que finaliza a partida*/
 function finalizarPartida(){
     const resultado = {
         timeA: jogoAtualModal[0].time,
         timeB: jogoAtualModal[1].time,
-        golsA: document.getElementById("mScoreA").textContent,
-        golsB: document.getElementById("mScoreB").textContent
+        golsA: parseInt(document.getElementById("mScoreA").textContent),
+        golsB: parseInt(document.getElementById("mScoreB").textContent)
     };
 
-    console.log("Resultado:", resultado);
+    //obtem resultados anteriores
+    let resultados = JSON.parse(localStorage.getItem("resultadosSemi")) || [];
+    resultados.push(resultado);
+    localStorage.setItem("resultadosSemi", JSON.stringify(resultados));
 
-    alert(`Resultado: ${resultado.timeA} ${resultado.golsA} x ${resultado.golsB} ${resultado.timeB}`);
+    
+    gerarFinaisSePossivel();
 
     fecharModal();
+}
+
+/*função para gerar finais 4 times*/ 
+function gerarFinaisSePossivel(){
+    const resultados = JSON.parse(localStorage.getItem("resultadosSemi"));
+    const finaisGeradas = localStorage.getItem("finaisGeradas");
+
+    if(finaisGeradas === 'true') return; //final já gerada
+    if(!resultados || resultados.length < 2){
+        return; //ainda ocorrendo as semifinais
+    }
+
+    const vencedores = [];
+    const perdedores = [];
+
+    resultados.forEach(jogo => {
+        if(jogo.golsA > jogo.golsB){
+            vencedores.push(jogo.timeA);
+            perdedores.push(jogo.timeB);
+        } else {
+            vencedores.push(jogo.timeB);
+            perdedores.push(jogo.timeA);
+        }
+    });
+
+    criarCardFinal(vencedores[0], vencedores[1]);
+    criarCardterceiro(perdedores[0], perdedores[1]);
+
+    localStorage.setItem("finaisGeradas", 'true');
+}
+
+/*função para criar card da final*/
+function criarCardFinal(time1, time2){
+    const container = document.getElementById("chaves");
+
+    const titulo = document.createElement("h3");
+    titulo.textContent = "Final";
+    container.appendChild(titulo);
+
+    const div = document.createElement("div");
+    div.classList.add("match-box");
+    div.innerText = `${time1} vs ${time2}`;
+
+    div.onclick = () => abrirModal([
+        {time: time1},
+        {time: time2}
+    ]);
+
+    container.appendChild(div);
+}   
+
+/*função para criar card do terceiro lugar*/
+function criarCardterceiro(time1, time2){
+    const container = document.getElementById("chaves");
+
+    const titulo = document.createElement("h3");
+    titulo.textContent = "3º lugar";
+    container.appendChild(titulo);
+
+    const div = document.createElement("div");
+    div.classList.add("match-box");
+    div.innerText = `${time1} vs ${time2}`;
+
+    div.onclick = () => abrirModal([
+        {time: time1},
+        {time: time2}
+    ]);
+
+    container.appendChild(div);
 }
