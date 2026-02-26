@@ -40,7 +40,7 @@ function cadastrar() {
     showScreen("login");
 }
 
-/* Placar */
+/* Sumula online */
 function addA() {
     let a = document.getElementById("scoreA");
     a.textContent = parseInt(a.textContent) + 1;
@@ -56,6 +56,7 @@ function zerarPlacar() {
     document.getElementById("scoreB").textContent = 0;
 }
 
+/** Função para selecionar formato do torneio */
 function selecionarFormato(qtdTimes) {
     if (qtdTimes === 4) {
         window.location.href = "times4.html";
@@ -63,7 +64,9 @@ function selecionarFormato(qtdTimes) {
         window.location.href = "times8.html";
     }
 }
-/* Função sorteio de times mata-mata */
+/* inicio times mata-mata times4.html*/
+
+/*fnção que salva os times*/ 
 function salvarTimes4(){
     const times = [];
 
@@ -275,3 +278,6 @@ function criarCardterceiro(time1, time2){
 
     container.appendChild(div);
 }
+
+/*até aqui fecha o torneio de mata-mata simples (4 times)*/ 
+

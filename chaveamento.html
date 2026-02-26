@@ -15,7 +15,7 @@
     </div>
 
     <div id="chaveamento" class="screen" style="display:block">
-        <h2>Chaveamento do Torneio</h2>
+        <h1>Chaveamento do Torneio</h1>
 
         <div class="grid" id="chaves">
 
@@ -29,11 +29,15 @@
         <h2>Registrar Partida</h2>
 
         <div class="score">
-            <span id="mTimeA">Time A</span>
-            <span id="mScoreA">0</span>
-            <span>X</span>
-            <span id="mScoreB">0</span>
-            <span id="mTimeB">Time B</span>
+            <div class="time" id="mTimeA">Time A</div>
+
+            <div class="placar">
+                <span id="mScoreA">0</span>
+                <span class="vs">X</span>
+                <span id="mScoreB">0</span>
+            </div>
+            
+            <div class="time" id="mTimeB">Time B</div>
         </div>
 
         <button class="btn" onclick="addGol('A')">+1 Time A</button>
