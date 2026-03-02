@@ -308,3 +308,49 @@ input:focus {
     }
 }
 
+.lista-jogadores {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 15px 0 25px 0;
+}
+
+.jogador-btn {
+    background: var(--secondary);
+    border: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.jogador-btn:hover {
+    transform: scale(1.05);
+    opacity: .9;
+}
+
+/*tabela do ranking*/
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #fff;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #2c3e50;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+

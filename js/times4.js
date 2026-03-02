@@ -1,14 +1,12 @@
-/** Função para selecionar formato do torneio */
-function selecionarFormato(qtdTimes) {
-    if (qtdTimes === 4) {
-        window.location.href = "times4.html";
-    } else {
-        window.location.href = "times8.html";
-    }
-}
-/* inicio times mata-mata times4.html*/
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("formTimes4");
 
-/*fnção que salva os times*/ 
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        salvarTimes4();
+    });
+});
+/*função que salva os times*/ 
 function salvarTimes4(){
     const times = [];
 

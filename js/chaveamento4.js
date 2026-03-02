@@ -1,3 +1,6 @@
+let placarA = 0;
+let placarB = 0;
+
 /*Função que gera o chaveamento*/ 
 function gerarChaveamento(){
     const container = document.getElementById("chaves");
@@ -6,7 +9,7 @@ function gerarChaveamento(){
     let times = JSON.parse(localStorage.getItem("times4"));
 
     if(!times || times.length < 4){
-        alert("cCadastre os 4 times para gerar o chaveamento!");
+        alert("Cadastre os 4 times para gerar o chaveamento!");
         return;
     }
 
@@ -39,29 +42,21 @@ function criarJogo(container, jogo){
     container.appendChild(div);
 }
 
-/*Função que carrega os times no placar da partida*/ 
-function carregarPartida() {
-    const jogo = JSON.parse(localStorage.getItem("jogoAtual"));
-
-    if(!jogo) return;
-
-    document.getElementById("timeA").textContent = jogo[0].time;
-    document.getElementById("timeB").textContent = jogo[1].time;
-}
-
-
 /*Modal da partida*/
-
-
 let jogoAtualModal = null;
 
 function abrirModal(jogo){
     jogoAtualModal = jogo;
 
+    placarA = 0;
+    placarB = 0;
+
     document.getElementById("mTimeA").textContent = jogo[0].time;
     document.getElementById("mTimeB").textContent = jogo[1].time;
     document.getElementById("mScoreA").textContent = 0;
     document.getElementById("mScoreB").textContent = 0;
+
+    carregarJogadoresModal(jogo[0].time, jogo[1].time);
 
     document.getElementById("modalPartida").style.display = "flex";
 }
@@ -79,6 +74,50 @@ function addGol(time){
         scoreB.textContent = parseInt(scoreB.textContent) + 1;
     }
 }
+
+/*função que carrega os jogadores de cada time*/
+function carregarJogadoresModal(timeA, timeB){
+    const dados = JSON.parse(localStorage.getItem("times4")) || [];
+
+    const objTimeA = dados.find(t => t.time === timeA) || {jogadores: []};
+    const objTimeB = dados.find(t => t.time === timeB) || {jogadores: []};
+
+    const divA = document.getElementById("jogadoresA");
+    const divB = document.getElementById("jogadoresB");
+
+    divA.innerHTML = "";
+    divB.innerHTML = "";
+
+    objTimeA.jogadores.forEach(jogador => {
+        const btn = document.createElement("button");
+        btn.textContent = jogador;
+        btn.classList.add("btn-jogador");
+        btn.onclick = () => registrarGol(jogador, "A");
+        divA.appendChild(btn);
+    });
+
+    objTimeB.jogadores.forEach(jogador => {
+        const btn = document.createElement("button");
+        btn.textContent = jogador;
+        btn.classList.add("btn-jogador");
+        btn.onclick = () => registrarGol(jogador, "B");
+        divB.appendChild(btn);
+    });
+}
+
+/*função que registra o gol do jogador e do time*/
+function registrarGol(nomeJogador, lado){
+    if(lado === "A"){
+        placarA++;
+        document.getElementById("mScoreA").textContent = placarA;
+    } else {
+        placarB++;
+        document.getElementById("mScoreB").textContent = placarB;
+    }
+
+    registrarArtilharia(nomeJogador);
+}
+
 /*função que finaliza a partida*/
 function finalizarPartida(){
     const resultado = {
@@ -168,4 +207,31 @@ function criarCardterceiro(time1, time2){
     container.appendChild(div);
 }
 
-/*até aqui fecha o torneio de mata-mata simples (4 times)*/ 
+/*Gera o torneio corrigindo o bug de ficar gerando no chaveamento.html*/
+
+document.addEventListener("DOMContentLoaded", () => {
+    gerarChaveamento();
+});
+/*Finaliza e leva para o Ranking*/
+function finalizarTorneio(){
+    const resultados = JSON.parse(localStorage.getItem("resultadosSemi")) || [];
+
+    if (resultados.length < 4) {
+        alert("Finalize todas as partidas para concluir o torneio!");
+        return;
+    }
+    window.location.href = "ranking.html";  
+}
+
+/*Função da artilharia geral do torneio*/
+function registrarArtilharia(jogador){
+    let artilharia = JSON.parse(localStorage.getItem("artilharia")) || {};
+
+    if(!artilharia[jogador]){
+        artilharia[jogador] = 0;
+    }
+
+    artilharia[jogador]++;
+
+    localStorage.setItem("artilharia", JSON.stringify(artilharia));
+} 

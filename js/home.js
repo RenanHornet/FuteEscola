@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 //logout temporário (depois o php assume)
-function logout(){
+function logout(e){
+    e.preventDefault();
     window.location.href = "index.html";
 }

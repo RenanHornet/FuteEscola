@@ -1,27 +1,14 @@
-/* Controle das telas */
-function showScreen(id) {
-    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-
-    /* Sidebar só aparece fora do login/cadastro */
-    if (id === "login" || id === "cadastro") {
-        document.getElementById("navbar").style.display = "none";
-    } else {
-        document.getElementById("navbar").style.display = "flex";
-    }
-}
-
 /* Função LOGIN */
 function entrar() {
-    let u = document.getElementById("user").value;
-    let p = document.getElementById("pass").value;
+    let u = document.getElementById("user").value.trim();
+    let p = document.getElementById("pass").value.trim();
 
     if (u === "" || p === "") {
         alert("Preencha todos os campos!");
         return;
     }
 
-    showScreen("home"); 
+    window.location.href = "home.html"; 
 }
 
 /* Função CADASTRO */
@@ -36,5 +23,5 @@ function cadastrar() {
     }
 
     alert("Cadastro efetuado com sucesso!");
-    showScreen("login");
+    window.location.href = "login.html";
 }
