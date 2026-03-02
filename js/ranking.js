@@ -1,39 +1,28 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const resultados = JSON.parse(localStorage.getItem("resultados")) || [];
+    const finalResults = JSON.parse(localStorage.getItem("finalResults")) || {};
     const tabelaBody = document.querySelector("#tabelaRanking tbody");
-
-    const pontuacao = {};
-
-    resultados.forEach(jogo => {
-        const { timeA, timeB, golsA, golsB } = jogo;
-
-        if (!pontuacao[timeA]) pontuacao[timeA] = 0;
-        if (!pontuacao[timeB]) pontuacao[timeB] = 0;
-
-        if (golsA > golsB) {
-            pontuacao[timeA] += 3;
-        } else if (golsB > golsA) {
-            pontuacao[timeB] += 3;
-        } else {
-            pontuacao[timeA] += 1;
-            pontuacao[timeB] += 1;
-        }
-    });
-
-    const rankingOrdenado = Object.entries(pontuacao)
-        .sort((a, b) => b[1] - a[1]);
 
     tabelaBody.innerHTML = "";
 
-    rankingOrdenado.forEach(([time, pontos], index) => {
+    if (!finalResults.campeao) {
+        tabelaBody.innerHTML = `<tr><td colspan="3">Finalize o torneio para ver o ranking</td></tr>`;
+        return;
+    }
+
+    const ranking = [
+        { posicao: 1, time: finalResults.campeao },
+        { posicao: 2, time: finalResults.vice },
+        { posicao: 3, time: finalResults.terceiro },
+        { posicao: 4, time: finalResults.quarto }
+    ];
+
+    ranking.forEach(item => {
         const tr = document.createElement("tr");
-
         tr.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${time}</td>
-            <td>${pontos}</td>
+            <td>${item.posicao}</td>
+            <td>${item.time}</td>
+            <td>-</td>
         `;
-
         tabelaBody.appendChild(tr);
     });
 });
