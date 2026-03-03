@@ -1,3 +1,4 @@
+/*Podium*/ 
 document.addEventListener("DOMContentLoaded", () => {
     const finalResults = JSON.parse(localStorage.getItem("finalResults")) || {};
     const tabelaBody = document.querySelector("#tabelaRanking tbody");
@@ -25,4 +26,26 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
         tabelaBody.appendChild(tr);
     });
+});
+
+/*Artilharia*/
+const artilharia = JSON.parse(localStorage.getItem("artilharia")) || [];
+const divArtilheiros = document.getElementById("topArtilheiros");
+
+const rankingArtilheiros = Object.entries(artilharia)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3);
+
+if (rankingArtilheiros.length === 0) {
+    divArtilheiros.innerHTML = "<p>Nenhum gol registrado.</p>";
+}
+
+rankingArtilheiros.forEach((item, index) => {
+    let medalha = "";
+    if (index === 0) medalha = "🥇";
+    else if (index === 1) medalha = "🥈";
+    else if (index === 2) medalha = "🥉";
+
+    divArtilheiros.innerHTML += `<p>${medalha} ${item[0]} - ${item[1]} gols</p>`;
+
 });

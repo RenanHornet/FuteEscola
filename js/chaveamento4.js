@@ -47,7 +47,7 @@ function abrirModal(jogo, fase){
 
     placarA = 0;
     placarB = 0;
-
+    
     document.getElementById("mTimeA").textContent = jogo[0].time;
     document.getElementById("mTimeB").textContent = jogo[1].time;
     document.getElementById("mScoreA").textContent = 0;
@@ -70,7 +70,7 @@ function addGol(time){
         document.getElementById("mScoreB").textContent = placarB;
     }
 }
-
+/*Carrega jogadores no modal*/ 
 function carregarJogadoresModal(timeA, timeB){
     const dados = JSON.parse(localStorage.getItem("times4")) || [];
 
@@ -86,7 +86,7 @@ function carregarJogadoresModal(timeA, timeB){
     objTimeA.jogadores.forEach(jogador => {
         const btn = document.createElement("button");
         btn.textContent = jogador;
-        btn.classList.add("btn-jogador");
+        btn.classList.add("jogador-btn");
         btn.onclick = () => registrarGol(jogador, "A");
         divA.appendChild(btn);
     });
@@ -94,12 +94,12 @@ function carregarJogadoresModal(timeA, timeB){
     objTimeB.jogadores.forEach(jogador => {
         const btn = document.createElement("button");
         btn.textContent = jogador;
-        btn.classList.add("btn-jogador");
+        btn.classList.add("jogador-btn2");
         btn.onclick = () => registrarGol(jogador, "B");
         divB.appendChild(btn);
     });
 }
-
+/*registra gol do jogador*/ 
 function registrarGol(nomeJogador, lado){
     addGol(lado);
     let artilharia = JSON.parse(localStorage.getItem("artilharia")) || {};
