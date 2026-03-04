@@ -1,16 +1,17 @@
 <?php
-$servidor = "localhost";
-$usuario = "root";
-$senha = "";
-$banco = "FuteEscola";
 
-$conexao = new mysqli($servidor, $usuario, $senha, $banco);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-if ($conexao->connect_error) {
-    die("Erro na conexão: ". $conexao->connect_error);
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db   = "FuteEscola";
 
+$conn = new mysqli($host, $user, $pass, $db);
+
+if ($conn->connect_error) {
+    die("Erro na conexão: " . $conn->connect_error);
 }
-
-echo "Conectado com sucesso!";
 
 ?>
