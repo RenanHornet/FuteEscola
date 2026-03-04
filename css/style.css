@@ -135,6 +135,8 @@ transition: .2s;
 }
 
 .modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
     background: white;
     padding: 40px;
     border-radius: 20px;
@@ -196,7 +198,7 @@ table {
 }
 table th {
     background: var(--text);
-    color: #0f3264;
+    color: white;
     padding: 12px;
 }
 

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="css/style.css">
+<title>Times6</title>
+</head>
+<body>
+    <div id="times6" class="screen" style="display: block;">
+    <h1>Cadastro de times (<span id="num-time">1</span>/6)</h1>
+    
+    <form id="formTimes6">
+        <div class="card-time">
+            <h2 id="titulo-time">Time 1</h2>
+            
+            <input id="nome-time" class="nomes-times" type="text" placeholder="Nome do time" required>
+            <hr>
+            
+            <div id="container-jogadores">
+                <input type="text" class="jog-input" placeholder="Nome do jogador 1">
+                <input type="text" class="jog-input" placeholder="Nome do jogador 2">
+                <input type="text" class="jog-input" placeholder="Nome do jogador 3">
+                <input type="text" class="jog-input" placeholder="Nome do jogador 4">
+                <input type="text" class="jog-input" placeholder="Nome do jogador 5">
+                <input type="text" class="jog-input" placeholder="Nome do jogador 6">
+                <input type="text" class="jog-input" placeholder="Nome do jogador 7">
+                <input type="text" class="jog-input" placeholder="Nome do jogador 8">
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="button" class="btn" id="btn-proximo" onclick="adicionarTime()">Salvar time</button>
+                <button type="button" class="btn" id="btn-finalizar" onclick="finalizarCadastro()" style="display:none; background: var(--primary);">Gerar Campeonato</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="js/times6.js"></script>            
+</body>
+</html>
