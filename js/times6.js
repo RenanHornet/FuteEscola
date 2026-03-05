@@ -1,71 +1,78 @@
 let listaDeTimes = [];
 let contador = 1;
-/*adiciona times com 1 forms somente*/ 
+
 function adicionarTime() {
     const nomeTime = document.getElementById("nome-time").value.trim();
     const inputsJogadores = document.querySelectorAll(".jog-input");
     let jogadores = [];
 
-    // Validação simples
     if (nomeTime === "") {
         alert("Por favor, digite o nome do time.");
         return;
     }
 
-    // Coleta jogadores preenchidos
     inputsJogadores.forEach(input => {
         if (input.value.trim() !== "") {
             jogadores.push(input.value.trim());
         }
     });
 
-    // Adiciona ao array principal
     listaDeTimes.push({
         time: nomeTime,
         jogadores: jogadores
     });
 
-    // Verifica se já chegou no limite
+    console.log("Time adicionado:", nomeTime, "Total agora:", listaDeTimes.length);
+
+    // Se ainda não chegamos no 6º, prepara o próximo
     if (contador < 6) {
         contador++;
-        // Limpa o formulário para o próximo
         document.getElementById("formTimes6").reset();
-        // Atualiza os textos na tela
         document.getElementById("num-time").innerText = contador;
         document.getElementById("titulo-time").innerText = "Time " + contador;
+        
+        // Se ACABOU de adicionar o 5º, o próximo será o 6º. 
+        // Vamos mostrar o botão de finalizar JUNTOS para o 6º time.
+        if (contador === 6) {
+            document.getElementById("btn-proximo").style.display = "none";
+            document.getElementById("btn-finalizar").style.display = "block";
+        }
     } 
-    
-    // Se cadastrou o 6º time, troca os botões
-    if (contador === 6) {
-        document.getElementById("btn-proximo").style.display = "none";
-        document.getElementById("btn-finalizar").style.display = "block";
-    }
 }
-/*gera jogos do torneio*/ 
+
+/* Função de finalizar alterada para capturar o último time automaticamente */
 function finalizarCadastro() {
-    
-    
-    // 1. (Embaralhar)
+    // Se o usuário clicar em finalizar e o 6º time ainda estiver no input, adiciona ele primeiro
+    if (listaDeTimes.length === 5) {
+        adicionarTime();
+    }
+
+    // Agora verifica se realmente temos os 6
+    if (listaDeTimes.length < 6) {
+        alert("Erro: Você precisa preencher os dados do 6º time antes de finalizar!");
+        return;
+    }
+
+    // 1. Embaralhar
     listaDeTimes.sort(() => Math.random() - 0.5);
 
-    // 2. Dividir Grupos (Slicing)
+    // 2. Dividir Grupos
     const grupoA = listaDeTimes.slice(0, 3);
     const grupoB = listaDeTimes.slice(3, 6);
 
-    // 3. Estruturar os dados para o localStorage
+    // 3. Estruturar os dados
     const dadosTorneio = {
         formato: "grupos",
         grupoA: grupoA,
         grupoB: grupoB,
-       
         partidas: gerarConfrontosIniciais(grupoA, grupoB)
     };
 
     localStorage.setItem("torneioAtual", JSON.stringify(dadosTorneio));
-    alert("Grupos gerados com sucesso!");
-    window.location.href = "chaveamento_grupos.html";
+    alert("Campeonato Gerado! Redirecionando...");
+    window.location.href = "chaveamento6.html";
 }
-/*gera os confrontos por grupo*/ 
+
 function gerarConfrontosIniciais(ga, gb) {
     return {
         "A": [

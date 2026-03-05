@@ -384,3 +384,30 @@ tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
+/*tela 6 times fase de grupos*/
+.container-competicao {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Duas colunas iguais */
+    gap: 30px;
+}
+
+@media (max-width: 768px) {
+    .container-competicao {
+        grid-template-columns: 1fr; /* No celular, um embaixo do outro */
+    }
+}
+
+.grid-competição {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start; /* Alinha o topo das colunas */
+}
+
+.coluna-ranking {
+    flex: 1; /* Ocupa uma parte do espaço */
+}
+
+.coluna-jogos {
+    flex: 1.5; /* Dá um pouco mais de destaque para os jogos */
+}
+
