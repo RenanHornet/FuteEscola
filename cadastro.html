@@ -13,11 +13,15 @@
             <img src="images/Logo_do_TCC.png" alt="Logo do site">
         </a>
 
-        <input id="c_user" type="text" placeholder="Usuário">
-        <input id="c_email" type="email" placeholder="Email">
-        <input id="c_pass" type="password" placeholder="Senha">
+    <form action="php/cadastrar.php" method="POST">
 
-        <button class="btn" onclick="cadastrar()">CADASTRAR</button>
+    <input name="usuario" type="text" placeholder="Usuário">
+    <input name="email" type="email" placeholder="Email">
+    <input name="senha" type="password" placeholder="Senha">
+
+    <button type="submit" class="btn">CADASTRAR</button>
+
+</form>
 
         <p style="text-align:center;margin-top:15px;">
             <a href="index.html" >Já tem conta? Entrar</a>
