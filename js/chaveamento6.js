@@ -114,3 +114,51 @@ function finalizarPartida() {
 function fecharModal() {
     document.getElementById("modalPartida").style.display = "none";
 }
+
+/* Função auxiliar para calcular o ranking e retornar os times ordenados */
+function obterClassificacao(grupo, partidas) {
+    let status = {};
+    
+    // Inicializa
+    grupo.forEach(t => status[t.time] = { time: t.time, jogadores: t.jogadores, p: 0, sg: 0 });
+
+    // Calcula
+    partidas.forEach(jogo => {
+        if (jogo.status === 'f') {
+            status[jogo.t1].sg += (jogo.gols1 - jogo.gols2);
+            status[jogo.t2].sg += (jogo.gols2 - jogo.gols1);
+            if (jogo.gols1 > jogo.gols2) status[jogo.t1].p += 3;
+            else if (jogo.gols2 > jogo.gols1) status[jogo.t2].p += 3;
+            else { status[jogo.t1].p += 1; status[jogo.t2].p += 1; }
+        }
+    });
+
+    // Ordena e retorna o objeto completo do time (para não perder os jogadores)
+    return Object.values(status).sort((a, b) => b.p - a.p || b.sg - a.sg);
+}
+
+/* Função que conclui a fase de grupos*/
+function concluirFaseDeGrupos() { 
+    const dados = JSON.parse(localStorage.getItem("torneioAtual"));
+    
+    // Verifica se todos os jogos foram finalizados 
+    const todosFinalizados = [...dados.partidas.A, ...dados.partidas.B].every(j => j.status === 'f');
+    if(!todosFinalizados) {
+        alert("Finalize todos os jogos da fase de grupos antes de prosseguir!");
+        return;
+    }
+
+    // Pega resultados ordenados
+    const rankA = obterClassificacao(dados.grupoA, dados.partidas.A);
+    const rankB = obterClassificacao(dados.grupoB, dados.partidas.B);
+
+    // Monta os objetos da semifinal (passando o objeto completo do time)
+    const semifinalistas = {
+        jogo1: [rankA[0], rankB[1]], // 1ºA x 2ºB
+        jogo2: [rankB[0], rankA[1]]  // 1ºB x 2ºA
+    };
+
+    localStorage.setItem("semifinal6_dados", JSON.stringify(semifinalistas));
+    alert("Fase de grupos concluída! Partiu Semifinais.");
+    window.location.href = "semifinal6.html";
+}

@@ -1,47 +1,39 @@
-let placarA = 0;
-let placarB = 0;
+/*puxa as informações da semifinal*/
 let jogoAtualModal = null;
-let todosOsTimes = JSON.parse(localStorage.getItem("times4")) || [];
+let placarA = 0;
+let placarB = 0;    
 
-// Gera o chaveamento inicial (semifinais)
-function gerarChaveamento(){
-    const container = document.getElementById("chaves");
-    container.innerHTML = ""; 
-
-    let times = JSON.parse(localStorage.getItem("times4"));
-    if(!times || times.length < 4){
-        alert("Cadastre os 4 times para gerar o chaveamento!");
+document.addEventListener("DOMContentLoaded", () => {
+    const dados = JSON.parse(localStorage.getItem("semifinal6_dados"));
+    localStorage.removeItem("resultadosSemi"); 
+    localStorage.removeItem("finalResults");
+    if (!dados) {
+        alert("Dados da seminfinal não encontrados!");
+        window.location.href = "chaveamento6.html";
         return;
     }
+    renderizarSemifinais(dados);
+});
 
-    // Limpa dados antigos
-    localStorage.removeItem("resultadosSemi");
-    localStorage.removeItem("finaisGeradas");
-    localStorage.removeItem("finalResults");
-    localStorage.removeItem("artilharia");
+function renderizarSemifinais(dados) {
+    const container = document.getElementById("chaves");
+    container.innerHTML = "";
 
-    // Embaralha times
-    times.sort(() => Math.random() - 0.5);
+    const jogos = [
+        {times: dados.jogo1, fase: "Semifinal 1"},
+        {times: dados.jogo2, fase: "Semifinal 2"}
+    ];
 
-    // Cria jogos da semifinal
-    const jogo1 = [times[0], times[1]];
-    const jogo2 = [times[2], times[3]];
-
-    criarJogo(container, jogo1, "Semifinal");
-    criarJogo(container, jogo2, "Semifinal");
+    jogos.forEach((j, index) => {
+        const div = document.createElement("div");
+        div.className = "match-box";
+        div.innerHTML = `<strong>${j.fase}</strong><br>${j.times[0].time} vs ${j.times[1].time}`;
+        div.onclick = () => abrirModal(j.times, j.fase);
+        container.appendChild(div);
+    });
 }
 
-// Cria cada jogo no DOM
-function criarJogo(container, jogo, fase){
-    const div = document.createElement("div");
-    div.classList.add("match-box");
-    div.innerText = `${jogo[0].time} vs ${jogo[1].time} (${fase})`;
-
-    div.onclick = () => abrirModal(jogo, fase);
-    container.appendChild(div);
-}
-
-/*abre o modal*/
+/*funções do modal de partida(mesmo que o do mata-mata)*/
 function abrirModal(jogo, fase){
     jogoAtualModal = { jogo, fase };
 
@@ -61,21 +53,13 @@ function fecharModal(){
     document.getElementById("modalPartida").style.display = "none";
 }
 
-function addGol(time){
-    if(time === "A"){
-        placarA++;
-        document.getElementById("mScoreA").textContent = placarA;
-    } else {
-        placarB++;
-        document.getElementById("mScoreB").textContent = placarB;
-    }
-}
-/*Carrega jogadores no modal*/ 
-function carregarJogadoresModal(timeA, timeB){
-    const dados = JSON.parse(localStorage.getItem("times4")) || [];
+function carregarJogadoresModal(timeA, timeB) {
+    // Busca a lista completa dos 6 times para achar os jogadores
+    const dadosGeral = JSON.parse(localStorage.getItem("torneioAtual"));
+    const todosOsTimes = [...dadosGeral.grupoA, ...dadosGeral.grupoB];
 
-    const objTimeA = dados.find(t => t.time === timeA) || {jogadores: []};
-    const objTimeB = dados.find(t => t.time === timeB) || {jogadores: []};
+    const objTimeA = todosOsTimes.find(t => t.time === timeA) || { jogadores: [] };
+    const objTimeB = todosOsTimes.find(t => t.time === timeB) || { jogadores: [] };
 
     const divA = document.getElementById("jogadoresA");
     const divB = document.getElementById("jogadoresB");
@@ -99,17 +83,27 @@ function carregarJogadoresModal(timeA, timeB){
         divB.appendChild(btn);
     });
 }
-/*registra gol do jogador*/ 
-function registrarGol(nomeJogador, lado){
+
+function addGol(lado) {
+    if (lado === "A") {
+        placarA++;
+        document.getElementById("mScoreA").textContent = placarA;
+    } else {
+        placarB++;
+        document.getElementById("mScoreB").textContent = placarB;
+    }
+}
+
+function registrarGol(nomeJogador, lado) {
     addGol(lado);
     let artilharia = JSON.parse(localStorage.getItem("artilharia")) || {};
-    if(!artilharia[nomeJogador]) artilharia[nomeJogador] = 0;
+    if (!artilharia[nomeJogador]) artilharia[nomeJogador] = 0;
     artilharia[nomeJogador]++;
     localStorage.setItem("artilharia", JSON.stringify(artilharia));
 }
 
-// Finaliza partida
-function finalizarPartida(){
+/*Gera as finais*/
+function finalizarPartida() {
     const resultado = {
         timeA: jogoAtualModal.jogo[0].time,
         timeB: jogoAtualModal.jogo[1].time,
@@ -119,25 +113,28 @@ function finalizarPartida(){
     };
 
     let resultadosSemi = JSON.parse(localStorage.getItem("resultadosSemi")) || [];
-    let finaisGeradas = localStorage.getItem("finaisGeradas") === 'true';
     let finalResults = JSON.parse(localStorage.getItem("finalResults")) || {};
 
-    if(jogoAtualModal.fase === "Semifinal"){
+    if (jogoAtualModal.fase.includes("Semifinal")) {
         resultadosSemi.push(resultado);
         localStorage.setItem("resultadosSemi", JSON.stringify(resultadosSemi));
-        if(resultadosSemi.length === 2) gerarFinais(resultadosSemi);
-    } else if(jogoAtualModal.fase === "Final" || jogoAtualModal.fase === "3º lugar"){
-        // Define campeão, vice, 3º e 4º
-        if(jogoAtualModal.fase === "Final"){
-            if(resultado.golsA > resultado.golsB){
+        
+        // Se já tivemos os 2 jogos da semi, gera a Final e 3º lugar
+        if (resultadosSemi.length === 2) {
+            gerarFinais(resultadosSemi);
+        }
+    } else {
+        // Lógica para Final e 3º Lugar
+        if (jogoAtualModal.fase === "Final") {
+            if (resultado.golsA > resultado.golsB) {
                 finalResults.campeao = resultado.timeA;
                 finalResults.vice = resultado.timeB;
             } else {
                 finalResults.campeao = resultado.timeB;
                 finalResults.vice = resultado.timeA;
             }
-        } else if(jogoAtualModal.fase === "3º lugar"){
-            if(resultado.golsA > resultado.golsB){
+        } else if (jogoAtualModal.fase === "3º lugar") {
+            if (resultado.golsA > resultado.golsB) {
                 finalResults.terceiro = resultado.timeA;
                 finalResults.quarto = resultado.timeB;
             } else {
@@ -146,25 +143,26 @@ function finalizarPartida(){
             }
         }
         localStorage.setItem("finalResults", JSON.stringify(finalResults));
-        localStorage.setItem("finaisGeradas", "true");
     }
-
     fecharModal();
 }
 
-// Gera final e disputa do 3º lugar
-function gerarFinais(resultadosSemi){
+function gerarFinais(resultadosSemi) {
     const container = document.getElementById("chaves");
-    container.innerHTML = ""; // limpa cards antigos
+    container.innerHTML = "<h2>Finais</h2>"; 
 
     const vencedores = [];
     const perdedores = [];
+
+    //objetos do time para pegar os jogadores
+    const dadosGeral = JSON.parse(localStorage.getItem("torneioAtual"));
+    const todosOsTimes = [...dadosGeral.grupoA, ...dadosGeral.grupoB];
 
     resultadosSemi.forEach(jogo => {
         let objTimeA = todosOsTimes.find(t => t.time === jogo.timeA);
         let objTimeB = todosOsTimes.find(t => t.time === jogo.timeB);
 
-        if(jogo.golsA > jogo.golsB){
+        if (jogo.golsA > jogo.golsB) {
             vencedores.push(objTimeA);
             perdedores.push(objTimeB);
         } else {
@@ -173,22 +171,25 @@ function gerarFinais(resultadosSemi){
         }
     });
 
-    // Cria cards da Final e 3º lugar passando objetos completos
+    // Cria os cards finais no DOM
     criarJogo(container, [vencedores[0], vencedores[1]], "Final");
     criarJogo(container, [perdedores[0], perdedores[1]], "3º lugar");
 }
 
-// Finaliza torneio e vai para ranking
-function finalizarTorneio(){
-    const finalResults = JSON.parse(localStorage.getItem("finalResults"));
-    if(!finalResults || !finalResults.campeao){
-        alert("Finalize todas as partidas para concluir o torneio!");
-        return;
-    }
-    window.location.href = "ranking.html";  
+function criarJogo(container, jogo, fase) {
+    const div = document.createElement("div");
+    div.className = "match-box";
+    div.innerHTML = `<strong>${fase}</strong><br>${jogo[0].time} vs ${jogo[1].time}`;
+    div.onclick = () => abrirModal(jogo, fase);
+    container.appendChild(div);
 }
 
-// Inicia chaveamento ao carregar
-document.addEventListener("DOMContentLoaded", () => {
-    gerarChaveamento();
-});
+/*Finaliza o torneio e salva os resultados*/
+function finalizarTorneio() {
+    const finalResults = JSON.parse(localStorage.getItem("finalResults"));
+    if (!finalResults || !finalResults.campeao || !finalResults.terceiro) {
+        alert("Finalize a Final e a Disputa de 3º lugar!");
+        return;
+    }
+    window.location.href = "ranking.html";
+}
