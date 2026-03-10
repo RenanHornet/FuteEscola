@@ -1,3 +1,14 @@
+
+/*limpa os dados do torneio anterior no navegador*/ 
+function iniciarNovoTorneio() {
+    localStorage.removeItem("finalResults");
+    localStorage.removeItem("artilharia");
+    localStorage.removeItem("resultadosSemi");
+    localStorage.removeItem("torneioAtual");//limpa o torneio 6 times
+    
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("formTimes4");
 
@@ -8,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 /*função que salva os times*/ 
 function salvarTimes4(){
+    iniciarNovoTorneio(); // Limpa os dados anteriores 
     const times = [];
 
     document.querySelectorAll(".card-time").forEach((card) => {

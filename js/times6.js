@@ -1,7 +1,19 @@
+
+/*limpa os dados do torneio anterior no navegador*/ 
+function limparDadosAntigos() {
+    localStorage.removeItem("finalResults");
+    localStorage.removeItem("artilharia");
+    localStorage.removeItem("resultadosSemi");
+    localStorage.removeItem("times4");
+}
+
+
+
 let listaDeTimes = [];
 let contador = 1;
 
 function adicionarTime() {
+    
     const nomeTime = document.getElementById("nome-time").value.trim();
     const inputsJogadores = document.querySelectorAll(".jog-input");
     let jogadores = [];
@@ -52,6 +64,8 @@ function finalizarCadastro() {
         alert("Erro: Você precisa preencher os dados do 6º time antes de finalizar!");
         return;
     }
+
+    limparDadosAntigos(); // Limpa os dados antigos antes de salvar o novo torneio    
 
     // 1. Embaralhar
     listaDeTimes.sort(() => Math.random() - 0.5);
