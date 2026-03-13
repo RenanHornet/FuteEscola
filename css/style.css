@@ -272,19 +272,24 @@ input:focus {
 }
 
 /* Botões */
-.btn {
-   width: 70%;
-   background: var(--secondary);
-   padding: 14px;
-   border: none;
-   border-radius: 30px;
-   color: white;
-   font-size: 18px;
-   font-weight: bold;
-   cursor: pointer;
-   transition: .2s;
-   text-align: center;
-   margin: 25px auto 0 auto;
+
+.container-botoes{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    margin-top:20px;
+}
+
+.btn{
+    width:70%;
+    padding:12px;
+    border:none;
+    border-radius:20px;
+    background:#78C800;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
 }
 
 .btn:hover {
