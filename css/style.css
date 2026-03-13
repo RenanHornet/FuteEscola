@@ -273,6 +273,7 @@ input:focus {
 
 /* Botões */
 
+/* Controle dos botões */
 .container-botoes{
     display:flex;
     flex-direction:column;
@@ -281,6 +282,7 @@ input:focus {
     margin-top:20px;
 }
 
+/* Stilo dos botões */
 .btn{
     width:70%;
     padding:12px;
@@ -290,6 +292,7 @@ input:focus {
     color:white;
     font-size:16px;
     cursor:pointer;
+    transition: transform 0.2s ease;
 }
 
 .btn:hover {
@@ -304,6 +307,7 @@ input:focus {
     border-radius: 15px;
     border: 2px solid var(--text);
     margin-bottom: 25px;
+    margin-top: 61px;
 }
 
 .card-time h3{
