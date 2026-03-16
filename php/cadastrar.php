@@ -1,30 +1,51 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+header('Content-Type: application/json');
 
 include("conexao.php");
 
-// Verifica se os dados foram enviados
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $usuario = $_POST['usuario'];
     $email   = $_POST['email'];
     $senha   = $_POST['senha'];
 
-    $sql = "INSERT INTO Cadastros (Usuario, Email, Senha)
-            VALUES ('$usuario', '$email', '$senha')";
+    // Verifica se email já existe
+    $verifica = "SELECT * FROM Cadastros WHERE Email = '$email'";
+    $resultado = $conn->query($verifica);
 
-    if ($conn->query($sql) === TRUE) {
-        echo "Cadastro realizado com sucesso!";
-    } else {
-        echo "Erro ao cadastrar: " . $conn->error;
+    if ($resultado->num_rows > 0) {
+
+        echo json_encode([
+            "status" => "erro",
+            "mensagem" => "Usuário ou email já cadastrado!"
+        ]);
+        exit;
+
     }
 
-} else {
-    echo "Acesso inválido.";
+    // Criptografar senha
+    $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+
+    $sql = "INSERT INTO Cadastros (Usuario, Email, Senha)
+            VALUES ('$usuario', '$email', '$senhaHash')";
+
+    if ($conn->query($sql) === TRUE) {
+
+        echo json_encode([
+            "status" => "sucesso"
+        ]);
+
+    } else {
+
+        echo json_encode([
+            "status" => "erro",
+            "mensagem" => "Erro ao cadastrar"
+        ]);
+
+    }
+
 }
 
 $conn->close();
-
 ?>

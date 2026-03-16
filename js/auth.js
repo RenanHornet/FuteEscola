@@ -1,27 +1,89 @@
-/* Função LOGIN */
-function entrar() {
-    let u = document.getElementById("user").value.trim();
-    let p = document.getElementById("pass").value.trim();
+console.log("Auth carregado");
 
-    if (u === "" || p === "") {
-        alert("Preencha todos os campos!");
-        return;
-    }
+document.addEventListener("DOMContentLoaded", function () {
 
-    window.location.href = "home.html"; 
+/* -------- CADASTRO -------- */
+
+const formCadastro = document.querySelector("#formCadastro");
+
+if (formCadastro) {
+
+formCadastro.addEventListener("submit", function(e) {
+
+e.preventDefault();
+
+const formData = new FormData(formCadastro);
+
+fetch("php/cadastrar.php", {
+method: "POST",
+body: formData
+})
+.then(response => response.json())
+.then(data => {
+
+if (data.status === "erro") {
+
+document.getElementById("erroCadastro").innerText = data.mensagem;
+
 }
 
-/* Função CADASTRO */
-function cadastrar() {
-    let u = document.getElementById("c_user").value;
-    let e = document.getElementById("c_email").value;
-    let p = document.getElementById("c_pass").value;
+if (data.status === "sucesso") {
 
-    if (u === "" || e === "" || p === "") {
-        alert("Preencha todos os campos!");
-        return;
-    }
+window.location.href = "index.html";
 
-    alert("Cadastro efetuado com sucesso!");
-    window.location.href = "login.html";
 }
+
+})
+.catch(error => {
+
+document.getElementById("erroCadastro").innerText = "Erro ao conectar com o servidor.";
+
+});
+
+});
+
+}
+
+/* -------- LOGIN -------- */
+
+const formLogin = document.querySelector("#formLogin");
+
+if (formLogin) {
+
+formLogin.addEventListener("submit", function(e){
+
+e.preventDefault();
+
+const formData = new FormData(formLogin);
+
+fetch("php/login.php", {
+method: "POST",
+body: formData
+})
+.then(response => response.json())
+.then(data => {
+
+if(data.status === "erro"){
+
+document.getElementById("erroLogin").innerText = data.mensagem;
+
+}
+
+if(data.status === "sucesso"){
+
+window.location.href = "php/home.php";
+
+}
+
+})
+.catch(error => {
+
+document.getElementById("erroLogin").innerText = "Erro ao conectar com o servidor.";
+
+});
+
+});
+
+}
+
+});
