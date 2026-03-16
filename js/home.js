@@ -1,11 +1,17 @@
-//Apenas estrutura inicial (pode ser ajudasda depois para a sessão PHP)
+//Apenas estrutura inicial (pode ser ajudada depois para a sessão PHP)
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Home carregada");
-
+console.log("Home carregada");
 });
 
-//logout temporário (depois o php assume)
+//logout agora conectado ao PHP
 function logout(e){
-    e.preventDefault();
+e.preventDefault();
+
+```
+fetch("php/logout.php")
+.then(() => {
     window.location.href = "index.html";
+});
+```
+
 }
