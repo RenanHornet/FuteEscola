@@ -26,11 +26,11 @@ if (!isset($_SESSION['usuario_id'])) {
 
 <a href="home.php">Home</a>
 
-<a href="../campeonato.html">Novo Campeonato</a>
+<a href="../campeonato.php">Novo Campeonato</a>
 
-<a href="../chaveamento.html">Chaveamento</a>
+<a href="../chaveamento.php">Chaveamento</a>
 
-<a href="../ranking.html">Ranking</a>
+<a href="../ranking.php">Ranking</a>
 
 <a href="logout.php">Sair</a>
 
