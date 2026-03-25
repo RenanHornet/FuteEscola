@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if(!isset($_SESSION['usuario'])){
+    header("Location: index.html");
+    exit();
+}
+?>
+
 <?php require 'php/auth.php'; ?>
 
 <!DOCTYPE html>

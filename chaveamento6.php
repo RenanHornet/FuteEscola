@@ -1,3 +1,4 @@
+<?php include("auth.php"); ?>
 <?php require 'php/auth.php'; ?>
 
 <!DOCTYPE html>

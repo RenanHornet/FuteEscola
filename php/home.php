@@ -1,12 +1,4 @@
-<?php
-session_start();
-
-if (!isset($_SESSION['usuario_id'])) {
-    header("Location: ../index.html");
-    exit();
-}
-?>
-
+<?php require("auth.php"); ?>
 <!DOCTYPE html>
 
 <html lang="pt-BR">

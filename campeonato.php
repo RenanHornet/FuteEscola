@@ -1,9 +1,3 @@
-<?php
-require_once 'php/auth.php';
-echo "PASSOU AQUI";
-exit();
-?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
