@@ -160,5 +160,5 @@ function concluirFaseDeGrupos() {
 
     localStorage.setItem("semifinal6_dados", JSON.stringify(semifinalistas));
     alert("Fase de grupos concluída! Partiu Semifinais.");
-    window.location.href = "semifinal6.html";
+    window.location.href = "semifinal6.php";
 }

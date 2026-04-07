@@ -7,7 +7,7 @@ if(!isset($_SESSION['usuario'])){
 }
 ?>
 
-<?php require 'php/auth.php'; ?>
+<?php require(__DIR__ . "/php/auth.php"); ?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -19,10 +19,10 @@ if(!isset($_SESSION['usuario'])){
 </head>
 <body>
     <div class="navbar">
-        <a href="home.html">Home</a>
-        <a href="campeonato.html">Novo Campeonato</a>
-        <a href="chaveamento.html">Chaveamento</a>
-        <a href="ranking.html">Ranking</a>
+        <a href="home.php">Home</a>
+        <a href="campeonato.php">Novo Campeonato</a>
+        <a href="chaveamento.php">Chaveamento</a>
+        <a href="ranking.php">Ranking</a>
         <a href="index.html" onclick="logout(event)">Sair</a>
     </div>
 

@@ -185,7 +185,7 @@ function finalizarTorneio(){
         alert("Finalize todas as partidas para concluir o torneio!");
         return;
     }
-    window.location.href = "ranking.html";  
+    window.location.href = "ranking.php";  
 }
 
 // Inicia chaveamento ao carregar

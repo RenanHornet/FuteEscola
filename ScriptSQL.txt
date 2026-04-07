@@ -11,6 +11,26 @@ Data_Cadastro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 
 );
 
+
+CREATE TABLE Times (
+    ID_Time INT AUTO_INCREMENT PRIMARY KEY,
+    Nome_Time VARCHAR(255) NOT NULL,
+    Usuario_ID INT NOT NULL,
+    Data_Cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Jogadores (
+    ID_Jogador INT AUTO_INCREMENT PRIMARY KEY,
+    Nome_Jogador VARCHAR(255) NOT NULL,
+    ID_Time INT,
+    FOREIGN KEY (ID_Time) REFERENCES Times(ID_Time)
+);
+
+
+
+
+
+
 DROP TABLE Cadastros;
 SELECT * from Cadastros;
 

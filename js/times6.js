@@ -84,7 +84,7 @@ function finalizarCadastro() {
 
     localStorage.setItem("torneioAtual", JSON.stringify(dadosTorneio));
     alert("Campeonato Gerado! Redirecionando...");
-    window.location.href = "chaveamento6.html";
+    window.location.href = "chaveamento6.php";
 }
 
 function gerarConfrontosIniciais(ga, gb) {

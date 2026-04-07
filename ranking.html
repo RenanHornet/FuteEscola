@@ -1,4 +1,3 @@
-<?php require(__DIR__ . "/php/auth.php"); ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,29 +8,26 @@
 </head>
 <body>
     <div class="navbar" style="display:flex">
-        <a href="home.php">Home</a>
-        <a href="chaveamento.php">Chaveamento</a>
-        <a href="ranking.php">Ranking</a>
+        <a href="home.html">Home</a>
+        <a href="chaveamento.html">Chaveamento</a>
+        <a href="ranking.html">Ranking</a>
         <a href="index.html">Sair</a>
     </div>
 
     <div id="ranking" class="screen" style="display:block">
     <h2>Ranking Geral</h2>
 
-    <table id="tabelaRanking">
-    <thead>
+    <table>
         <tr>
             <th>Posição</th>
             <th>Time</th>
             <th>Pontos</th>
         </tr>
-    </thead>
-    <tbody>
-        <!-- JS vai preencher aqui -->
-    </tbody>
-</table>
+        <tr><td>1</td><td>Time Azul</td><td>30</td></tr>
+        <tr><td>2</td><td>Time Verde</td><td>26</td></tr>
+    </table>
+    </div>
 
-<h2>top 3 artilheiros</h2>
-<div id="topArtilheiros"></div>
 
-<script src="js/ranking.js"></script>
+</body>
+</html>

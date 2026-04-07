@@ -1,4 +1,4 @@
-<?php require("auth.php"); ?>
+<?php require(__DIR__ . "/php/auth.php"); ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,9 +9,9 @@
 </head>
 <body>
     <div class="navbar" style="display:flex">
-        <a href="home.html">Home</a>
-        <a href="chaveamento.html">Chaveamento</a>
-        <a href="ranking.html">Ranking</a>
+        <a href="home.php">Home</a>
+        <a href="chaveamento.php">Chaveamento</a>
+        <a href="ranking.php">Ranking</a>
         <a href="index.html">Sair</a>
     </div>
 

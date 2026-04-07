@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chaveamento</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="navbar" style="display:flex">
+        <a href="home.html">Home</a>
+        <a href="chaveamento.html">Chaveamento</a>
+        <a href="ranking.html">Ranking</a>
+        <a href="index.html">Sair</a>
+    </div>
+
+    <div id="chaveamento" class="screen" style="display:block">
+        <h2>Chaveamento do Torneio</h2>
+
+        <div class="grid" id="chaves">
+
+        </div>
+        <button class="btn" onclick="gerarChaveamento()">
+            Gerar Chaveamento
+        </button>
+    </div>
+    <div id="modalPartida" class="modal">
+    <div class="modal-content">
+        <h2>Registrar Partida</h2>
+
+        <div class="score">
+            <span id="mTimeA">Time A</span>
+            <span id="mScoreA">0</span>
+            <span>X</span>
+            <span id="mScoreB">0</span>
+            <span id="mTimeB">Time B</span>
+        </div>
+
+        <button class="btn" onclick="addGol('A')">+1 Time A</button>
+        <button class="btn" onclick="addGol('B')">+1 Time B</button>
+        <button class="btn" onclick="finalizarPartida()">Finalizar</button>
+        <button class="btn btn-orange" onclick="fecharModal()">Fechar</button>
+    </div>
+</div>
+<script src="js/script.js"></script>    
+</body>
+</html>

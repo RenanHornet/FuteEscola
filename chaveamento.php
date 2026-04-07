@@ -1,4 +1,4 @@
-<?php require("auth.php"); ?>
+<?php require(__DIR__ . "/php/auth.php"); ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>

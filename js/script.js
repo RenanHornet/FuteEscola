@@ -59,12 +59,12 @@ function zerarPlacar() {
 /** Função para selecionar formato do torneio */
 function selecionarFormato(qtdTimes) {
     if (qtdTimes === 4) {
-        window.location.href = "times4.html";
+        window.location.href = "times4.php";
     } else {
-        window.location.href = "times8.html";
+        window.location.href = "times6.php";
     }
 }
-/* inicio times mata-mata times4.html*/
+/* inicio times mata-mata times4.php*/
 
 /*fnção que salva os times*/ 
 function salvarTimes4(){
@@ -106,7 +106,7 @@ function salvarTimes4(){
     localStorage.setItem("times4", JSON.stringify(times));
 
     /*redireciona*/
-    window.location.href = "chaveamento.html";
+    window.location.href = "chaveamento.php";
 }
 
 /*Função que gera o chaveamento*/ 

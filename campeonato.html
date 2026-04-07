@@ -7,27 +7,27 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="navbar">
-        <a href="home.php">Home</a>
-        <a href="chaveamento.php">Chaveamento</a>
-        <a href="ranking.php">Ranking</a>
+    <div class="navbar" style="display:flex">
+        <a href="home.html">Home</a>
+        <a href="chaveamento.html">Chaveamento</a>
+        <a href="ranking.html">Ranking</a>
         <a href="index.html">Sair</a>
     </div>
     <div id = "campeonato" class="screen active">
-        <h1>Novo Campeonato</h1>
+        <h2>Novo Campeonato</h2>
         <div class="formato">
-            <p class="frase"> <strong>Escolha o formato do campeonato:</strong></p>
-            <div class="container-botoes">
+            <p> <strong>Escolha o formato do campeonato:</strong></p>
+            <div>
                 <button class="btn" onclick="selecionarFormato(4)">
                     Campeonato Simples (4 times)
                 </button>
-                <button class="btn" onclick="selecionarFormato(6)">
-                    Por grupo (6 times)
+                <button class="btn" onclick="selecionarFormato(8)">
+                    Por grupo (8 times)
                 </button>
             </div>    
         </div>
+        <script src="js/script.js"></script>
 
     </div>
-<script src="js/campeonato.js"></script>
 </body>
 </html>
