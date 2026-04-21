@@ -1,0 +1,40 @@
+<?php
+session_start();
+
+if(!isset($_SESSION['usuario'])){
+    header("Location: index.html");
+    exit();
+}
+?>
+
+<?php require 'php/auth.php'; ?>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home - FutEscola</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="home.html">Home</a>
+        <a href="campeonato.html">Novo Campeonato</a>
+        <a href="chaveamento.html">Chaveamento</a>
+        <a href="ranking.html">Ranking</a>
+        <a href="index.html" onclick="logout(event)">Sair</a>
+    </div>
+
+    <div id="home" class="screen">
+        <h1>FutEscola</h1>
+        <div class="logologin">
+            <img src="images/Logo_do_TCC-P2.png" alt="Logo do site">
+        </div>
+        <p class="frase">
+            <strong>Uma proposta mais moderna para seu interclasse!</strong>
+        </p>
+    </div>
+    <script src="js/home.js"></script>
+</body>
+</html>

@@ -1,12 +1,4 @@
-<?php
-session_start();
-
-if (!isset($_SESSION['usuario_id'])) {
-    header("Location: ../index.html");
-    exit();
-}
-?>
-
+<?php require("auth.php"); ?>
 <!DOCTYPE html>
 
 <html lang="pt-BR">
@@ -26,11 +18,11 @@ if (!isset($_SESSION['usuario_id'])) {
 
 <a href="home.php">Home</a>
 
-<a href="../campeonato.html">Novo Campeonato</a>
+<a href="../campeonato.php">Novo Campeonato</a>
 
-<a href="../chaveamento.html">Chaveamento</a>
+<a href="../chaveamento.php">Chaveamento</a>
 
-<a href="../ranking.html">Ranking</a>
+<a href="../ranking.php">Ranking</a>
 
 <a href="logout.php">Sair</a>
 
