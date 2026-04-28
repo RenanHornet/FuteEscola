@@ -19,11 +19,11 @@ if(!isset($_SESSION['usuario'])){
 </head>
 <body>
     <div class="navbar">
-        <a href="home.html">Home</a>
-        <a href="campeonato.html">Novo Campeonato</a>
-        <a href="chaveamento.html">Chaveamento</a>
-        <a href="ranking.html">Ranking</a>
-        <a href="index.html" onclick="logout(event)">Sair</a>
+        <a href="home.php">Home</a>
+        <a href="campeonato.php">Novo Campeonato</a>
+        <a href="chaveamento.php">Chaveamento</a>
+        <a href="ranking.php">Ranking</a>
+        <a href="index.php" onclick="logout(event)">Sair</a>
     </div>
 
     <div id="home" class="screen">
