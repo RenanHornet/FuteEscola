@@ -282,7 +282,7 @@ input:focus {
     margin-top:20px;
 }
 
-/* Stilo dos botões */
+/* Etilo dos botões */
 .btn{
     width:70%;
     padding:12px;
@@ -301,6 +301,16 @@ input:focus {
 }
 
 
+/* Classe que deixa o botão verde e travado */
+.match-box.finalizado {
+    background-color: var(--secondary) !important; 
+    color: white !important;
+    cursor: not-allowed;
+    pointer-events: none; 
+    opacity: 0.9;
+}
+
+/*Css do modal*/
 .card-time{
     background: #f7faff;
     padding: 20px;

@@ -9,10 +9,10 @@
 </head>
 <body>
     <div class="navbar" style="display:flex">
-        <a href="home.html">Home</a>
-        <a href="chaveamento.html">Chaveamento</a>
-        <a href="ranking.html">Ranking</a>
-        <a href="index.html">Sair</a>
+        <a href="home.php">Home</a>
+        <a href="chaveamento.php">Chaveamento</a>
+        <a href="ranking.php">Ranking</a>
+        <a href="index.php">Sair</a>
     </div>
 
     <div id="ranking" class="screen" style="display:block">

@@ -5,8 +5,7 @@ let placarB = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
     const dados = JSON.parse(localStorage.getItem("semifinal6_dados"));
-    localStorage.removeItem("resultadosSemi"); 
-    localStorage.removeItem("finalResults");
+    
     if (!dados) {
         alert("Dados da seminfinal não encontrados!");
         window.location.href = "chaveamento6.html";
@@ -24,13 +23,43 @@ function renderizarSemifinais(dados) {
         {times: dados.jogo2, fase: "Semifinal 2"}
     ];
 
-    jogos.forEach((j, index) => {
-        const div = document.createElement("div");
-        div.className = "match-box";
-        div.innerHTML = `<strong>${j.fase}</strong><br>${j.times[0].time} vs ${j.times[1].time}`;
-        div.onclick = () => abrirModal(j.times, j.fase);
-        container.appendChild(div);
+    jogos.forEach((j) => {
+        criarJogo(container, j.times, j.fase); // Usando a função criarJogo para padronizar
     });
+}
+
+/* --- AJUSTE NA FUNÇÃO CRIAR JOGO --- */
+function criarJogo(container, jogo, fase) {
+    const div = document.createElement("div");
+    div.className = "match-box";
+    
+    // RG único para o card (Fase + Times)
+    const jogoID = `${fase}-${jogo[0].time}-${jogo[1].time}`;
+    div.setAttribute("data-id", jogoID);
+    
+    div.innerHTML = `<strong>${fase}</strong><br>${jogo[0].time} vs ${jogo[1].time}`;
+
+    // VERIFICAÇÃO DE PERSISTÊNCIA (Ao carregar a página)
+    const resultadosSemi = JSON.parse(localStorage.getItem("resultadosSemi")) || [];
+    const finalResults = JSON.parse(localStorage.getItem("finalResults")) || {};
+
+    const jaFinalizado = resultadosSemi.some(r => r.fase === fase && r.timeA === jogo[0].time) || 
+                         (fase === "Final" && finalResults.campeao) || 
+                         (fase === "3º lugar" && finalResults.terceiro);
+
+    if (jaFinalizado) {
+        div.classList.add("finalizado");
+    }
+
+    div.onclick = () => {
+        if (div.classList.contains("finalizado")) {
+            alert("Partida já encerrada!");
+            return;
+        }
+        abrirModal(jogo, fase);
+    };
+    
+    container.appendChild(div);
 }
 
 /*funções do modal de partida(mesmo que o do mata-mata)*/
@@ -118,13 +147,8 @@ function finalizarPartida() {
     if (jogoAtualModal.fase.includes("Semifinal")) {
         resultadosSemi.push(resultado);
         localStorage.setItem("resultadosSemi", JSON.stringify(resultadosSemi));
-        
-        // Se já tivemos os 2 jogos da semi, gera a Final e 3º lugar
-        if (resultadosSemi.length === 2) {
-            gerarFinais(resultadosSemi);
-        }
+        if (resultadosSemi.length === 2) gerarFinais(resultadosSemi);
     } else {
-        // Lógica para Final e 3º Lugar
         if (jogoAtualModal.fase === "Final") {
             if (resultado.golsA > resultado.golsB) {
                 finalResults.campeao = resultado.timeA;
@@ -144,9 +168,17 @@ function finalizarPartida() {
         }
         localStorage.setItem("finalResults", JSON.stringify(finalResults));
     }
+
+    //Trava visual 
+    const jogoID = `${jogoAtualModal.fase}-${jogoAtualModal.jogo[0].time}-${jogoAtualModal.jogo[1].time}`;
+    const card = document.querySelector(`[data-id="${jogoID}"]`);
+    if (card) {
+        card.classList.add("finalizado");
+    }
+
     fecharModal();
 }
-
+/*Gera as finais*/
 function gerarFinais(resultadosSemi) {
     const container = document.getElementById("chaves");
     container.innerHTML = "<h2>Finais</h2>"; 
@@ -176,14 +208,6 @@ function gerarFinais(resultadosSemi) {
     criarJogo(container, [perdedores[0], perdedores[1]], "3º lugar");
 }
 
-function criarJogo(container, jogo, fase) {
-    const div = document.createElement("div");
-    div.className = "match-box";
-    div.innerHTML = `<strong>${fase}</strong><br>${jogo[0].time} vs ${jogo[1].time}`;
-    div.onclick = () => abrirModal(jogo, fase);
-    container.appendChild(div);
-}
-
 /*Finaliza o torneio e salva os resultados*/
 function finalizarTorneio() {
     const finalResults = JSON.parse(localStorage.getItem("finalResults"));
@@ -191,5 +215,5 @@ function finalizarTorneio() {
         alert("Finalize a Final e a Disputa de 3º lugar!");
         return;
     }
-    window.location.href = "ranking.html";
+    window.location.href = "ranking.php";
 }

@@ -31,11 +31,21 @@ function gerarChaveamento(){
     criarJogo(container, jogo2, "Semifinal");
 }
 
-// Cria cada jogo no DOM
+/*Cria cada jogo no DOM*/
 function criarJogo(container, jogo, fase){
     const div = document.createElement("div");
     div.classList.add("match-box");
+    
+    const jogoID = `${jogo[0].time}-${jogo[1].time}`;
+    div.setAttribute("data-id", jogoID);
+
     div.innerText = `${jogo[0].time} vs ${jogo[1].time} (${fase})`;
+
+    // Se o jogo já estiver no localStorage (caso o user dê F5), já nasce verde
+    let resultadosSemi = JSON.parse(localStorage.getItem("resultadosSemi")) || [];
+    if(resultadosSemi.some(r => r.timeA === jogo[0].time && r.timeB === jogo[1].time)) {
+        div.classList.add("finalizado");
+    }
 
     div.onclick = () => abrirModal(jogo, fase);
     container.appendChild(div);
@@ -119,7 +129,6 @@ function finalizarPartida(){
     };
 
     let resultadosSemi = JSON.parse(localStorage.getItem("resultadosSemi")) || [];
-    let finaisGeradas = localStorage.getItem("finaisGeradas") === 'true';
     let finalResults = JSON.parse(localStorage.getItem("finalResults")) || {};
 
     if(jogoAtualModal.fase === "Semifinal"){
@@ -127,7 +136,6 @@ function finalizarPartida(){
         localStorage.setItem("resultadosSemi", JSON.stringify(resultadosSemi));
         if(resultadosSemi.length === 2) gerarFinais(resultadosSemi);
     } else if(jogoAtualModal.fase === "Final" || jogoAtualModal.fase === "3º lugar"){
-        // Define campeão, vice, 3º e 4º
         if(jogoAtualModal.fase === "Final"){
             if(resultado.golsA > resultado.golsB){
                 finalResults.campeao = resultado.timeA;
@@ -149,10 +157,15 @@ function finalizarPartida(){
         localStorage.setItem("finaisGeradas", "true");
     }
 
+    const jogoID = `${resultado.timeA}-${resultado.timeB}`;
+    const card = document.querySelector(`[data-id="${jogoID}"]`);
+    if(card) {
+        card.classList.add("finalizado"); 
+    }
+
     fecharModal();
 }
-
-// Gera final e disputa do 3º lugar
+/*gera finais*/
 function gerarFinais(resultadosSemi){
     const container = document.getElementById("chaves");
     container.innerHTML = ""; // limpa cards antigos

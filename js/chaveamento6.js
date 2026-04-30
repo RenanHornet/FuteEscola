@@ -1,4 +1,4 @@
-// --- PARTE 1: INICIALIZAÇÃO ---
+/*Inicialização*/
 document.addEventListener("DOMContentLoaded", () => {
     const dados = JSON.parse(localStorage.getItem("torneioAtual"));
     if (dados) {
@@ -7,13 +7,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// --- PARTE 2: DESENHAR INTERFACE (DOM) ---
+/*desenha a interface*/ 
 function renderizarJogos(partidas) {
     const container = document.getElementById("lista-jogos");
-    container.innerHTML = ""; // Limpa tudo
+    container.innerHTML = ""; 
 
     ["A", "B"].forEach(grupo => {
-        // Criar o título do grupo como um elemento
         const titulo = document.createElement("h4");
         titulo.innerText = `Grupo ${grupo}`;
         container.appendChild(titulo);
@@ -23,17 +22,26 @@ function renderizarJogos(partidas) {
             
             const div = document.createElement("div");
             div.className = "match-box";
-            // Usamos innerHTML apenas para o conteúdo interno do card
+            //Destaca o jogo já finalizado
+            if (jogo.status === 'f') {
+                div.classList.add("finalizado"); 
+            }
+
             div.innerHTML = `<span>${jogo.t1}</span> <strong>${placar}</strong> <span>${jogo.t2}</span>`;
             
-            // Adicionamos o clique diretamente no objeto div
-            div.onclick = () => abrirModalSúmula(grupo, index);
+            div.onclick = () => {
+                // Bloqueia a abertura do modal se o status for 'f'
+                if (jogo.status === 'f') {
+                    alert("Resultado já registrado!");
+                    return;
+                }
+                abrirModalSúmula(grupo, index);
+            };
             
             container.appendChild(div);
         });
     });
 }
-
 function atualizarClassificacao() {
     const dados = JSON.parse(localStorage.getItem("torneioAtual"));
     let statusGrupos = { A: {}, B: {} };
@@ -73,25 +81,35 @@ function abrirModalSúmula(grupo, index) {
     document.getElementById("mScoreA").innerText = "0";
     document.getElementById("mScoreB").innerText = "0";
 
-    const time1Dados = dados[`grupo${grupo}`].find(t => t.time === jogo.t1);
-    const time2Dados = dados[`grupo${grupo}`].find(t => t.time === jogo.t2);
-
-    criarBotoesGols(time1Dados.jogadores, "jogadoresA", "mScoreA");
-    criarBotoesGols(time2Dados.jogadores, "jogadoresB", "mScoreB");
+    carregarJogadoresModal(jogo.t1, jogo.t2);
 
     document.getElementById("modalPartida").style.display = "flex";
 }
 
-function criarBotoesGols(jogadores, containerId, placarId) {
+function carregarJogadoresModal(timeA, timeB) {
+    const dadosGeral = JSON.parse(localStorage.getItem("torneioAtual"));
+    // Une os grupos para não dar erro de busca
+    const todosOsTimes = [...dadosGeral.grupoA, ...dadosGeral.grupoB];
+
+    const objTimeA = todosOsTimes.find(t => t.time === timeA) || { jogadores: [] };
+    const objTimeB = todosOsTimes.find(t => t.time === timeB) || { jogadores: [] };
+
+    // Aqui ela distribui as tarefas para a função de cima
+    criarBotoesGols(objTimeA.jogadores, "jogadoresA", "mScoreA", "jogador-btn");
+    criarBotoesGols(objTimeB.jogadores, "jogadoresB", "mScoreB", "jogador-btn2");
+}
+
+function criarBotoesGols(jogadores, containerId, placarId, classeCor) {
     const container = document.getElementById(containerId);
     container.innerHTML = ""; 
     jogadores.forEach(nome => {
         const btn = document.createElement("button");
-        btn.className = "jogador-btn";
+        btn.className = classeCor; 
         btn.innerText = nome;
         btn.onclick = () => {
             let placar = document.getElementById(placarId);
             placar.innerText = parseInt(placar.innerText) + 1;
+            registrarGol(nome); // Chama sua função de artilharia
         };
         container.appendChild(btn);
     });
@@ -160,5 +178,5 @@ function concluirFaseDeGrupos() {
 
     localStorage.setItem("semifinal6_dados", JSON.stringify(semifinalistas));
     alert("Fase de grupos concluída! Partiu Semifinais.");
-    window.location.href = "semifinal6.html";
+    window.location.href = "semifinal6.php";
 }
