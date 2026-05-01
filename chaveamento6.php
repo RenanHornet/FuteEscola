@@ -1,28 +1,30 @@
-
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chaveamento 6 Times</title>
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaveamento 6 Times - FutEscola</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     
-    <div class="navbar" style="display:flex">
-        <a href="home.php">Home</a>
-        <a href="chaveamento.php">Chaveamento</a>
-        <a href="ranking.php">Ranking</a>
-        <a href="index.php">Sair</a>
-    </div>
+    <header>
+        <nav class="navbar" style="display:flex">
+            <a href="home.php">Home</a>
+            <a href="chaveamento.php">Chaveamento</a>
+            <a href="ranking.php">Ranking</a>
+            <a href="index.html">Sair</a>
+        </nav>
+    </header>
     
-        <!-- Conteúdo 6 times -->
-    <div class="screen active" style="max-width: 1000px">
-        <h1>Fase de Grupos</h1>
+    <main class="screen active" style="max-width: 1000px">
+        <header>
+            <h1>Fase de Grupos</h1>
+        </header>
+
         <div class="container-competicao">
             <aside class="coluna-ranking">
-                <div class="card-time">
+                <section class="card-time">
                     <h3>Grupo A</h3>
                     <table class="tabela-mini" id="tabela-A">
                         <thead>
@@ -34,9 +36,9 @@
                         </thead>
                         <tbody></tbody>
                     </table>
-                </div>
+                </section>
 
-                <div class="card-time">
+                <section class="card-time">
                     <h3>Grupo B</h3>
                     <table class="tabela-mini" id="tabela-B">
                         <thead>
@@ -48,30 +50,31 @@
                         </thead>
                         <tbody></tbody>
                     </table>    
-                </div>    
+                </section>    
             </aside>
 
             <section class="coluna-jogos">
-                <h3>Confrontos</h3>
-                <div id="lista-jogos">
-
+                <header>
+                    <h3>Confrontos</h3>
+                </header>
+                <div id="lista-jogos" aria-live="polite">
+                    <!-- JS preenche aqui -->
                 </div>
-
             </section>
-
         </div>
 
-        <div class="container-botoes">
-        <button class="btn" onclick="concluirFaseDeGrupos()">finalizar fase</button>
-        </div>
-    </div>
-    <!-- Modal de registro de partida -->
-      
-    <div id="modalPartida" class="modal">
+        <footer class="container-botoes">
+            <button class="btn" onclick="concluirFaseDeGrupos()">Finalizar fase</button>
+        </footer>
+    </main>
+
+    <section id="modalPartida" class="modal" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
         <div class="modal-content">
-            <h2>Registrar Partida</h2>
+            <header>
+                <h2 id="modalTitle">Registrar Partida</h2>
+            </header>
             
-            <div class="score">
+            <article class="score">
                 <div class="time-box">
                     <h3>Time A</h3>
                     <div class="time" id="mTimeA">Time A</div>
@@ -87,20 +90,25 @@
                     <h3>Time B</h3>
                     <div class="time" id="mTimeB">Time B</div>
                 </div>
-            </div>
+            </article>
 
-            <h3>Jogadores - Time A</h3>
-            <div id="jogadoresA" class="lista-jogadores"></div>
+            <section>
+                <h3>Jogadores - Time A</h3>
+                <div id="jogadoresA" class="lista-jogadores"></div>
+            </section>
 
-            <h3>Jogadores - Time B</h3>
-            <div id="jogadoresB" class="lista-jogadores"></div>
+            <section>
+                <h3>Jogadores - Time B</h3>
+                <div id="jogadoresB" class="lista-jogadores"></div>
+            </section>
             
-            <div class="container-botoes">
-            <button class="btn" onclick="finalizarPartida()">Finalizar</button>
-            <button class="btn" onclick="fecharModal()">Fechar</button>
-            </div>
+            <footer class="container-botoes">
+                <button class="btn" onclick="finalizarPartida()">Finalizar</button>
+                <button class="btn" onclick="fecharModal()">Fechar</button>
+            </footer>
         </div>
-    </div>    
-<script src="js/chaveamento6.js"></script>
+    </section>    
+
+    <script src="js/chaveamento6.js"></script>
 </body>
 </html>

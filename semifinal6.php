@@ -1,65 +1,81 @@
-
-
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chaveamento</title>
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semifinal - FutEscola</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="navbar" style="display:flex">
-        <a href="home.php">Home</a>
-        <a href="chaveamento.php">Chaveamento</a>
-        <a href="ranking.php">Ranking</a>
-        <a href="index.php">Sair</a>
-    </div>
+    <header>
+        <nav class="navbar" style="display:flex">
+            <a href="home.php">Home</a>
+            <a href="chaveamento.php">Chaveamento</a>
+            <a href="ranking.php">Ranking</a>
+            <a href="index.html">Sair</a>
+        </nav>
+    </header>
 
-    <div id="chaveamento" class="screen" style="display:block">
-        <h1>Chaveamento do Torneio</h1>
+    <main id="chaveamento" class="screen" style="display:block">
+        <header>
+            <h1>Chaveamento do Torneio</h1>
+            <p style="text-align: center; color: var(--primary);">Fase Final</p>
+        </header>
 
-        <div class="grid" id="chaves">
+        <!-- Seção onde o JS vai renderizar as chaves da semifinal e final -->
+        <section class="grid" id="chaves" aria-live="polite">
+            <!-- Conteúdo dinâmico -->
+        </section>
 
+        <footer class="container-botoes">
+            <button class="btn" onclick="finalizarTorneio()">
+                Finalizar Torneio
+            </button>
+        </footer>
+    </main>
+
+    <!-- Modal de registro de partida -->
+    <section id="modalPartida" class="modal" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
+        <div class="modal-content">
+            <header>
+                <h2 id="modalTitle">Registrar Partida</h2>
+            </header>
+            
+            <article class="score">
+                <div class="time-box">
+                    <h3>Time A</h3>
+                    <div class="time" id="mTimeA">Time A</div>
+                </div>
+
+                <div class="placar">
+                    <span id="mScoreA">0</span>
+                    <span class="vs">X</span>
+                    <span id="mScoreB">0</span>
+                </div>
+
+                <div class="time-box">
+                    <h3>Time B</h3>
+                    <div class="time" id="mTimeB">Time B</div>
+                </div>
+            </article>
+
+            <section>
+                <h3>Jogadores - Time A</h3>
+                <div id="jogadoresA" class="lista-jogadores"></div>
+            </section>
+
+            <section>
+                <h3>Jogadores - Time B</h3>
+                <div id="jogadoresB" class="lista-jogadores"></div>
+            </section>
+
+            <footer class="container-botoes">
+                <button class="btn" onclick="finalizarPartida()">Finalizar</button>
+                <button class="btn btn-orange" onclick="fecharModal()">Fechar</button>
+            </footer>
         </div>
-        <div class="container-botoes">
-        <button class="btn" onclick="finalizarTorneio()">
-            Finalizar Torneio
-        </button>
-        </div>
-    </div>
-    <div id="modalPartida" class="modal">
-    <div class="modal-content">
-        <h2>Registrar Partida</h2>
-        
-        <div class="score">
-            <div class="time-box">
-                <h3>Time A</h3>
-                <div class="time" id="mTimeA">Time A</div>
-            </div>
+    </section>
 
-            <div class="placar">
-                <span id="mScoreA">0</span>
-                <span class="vs">X</span>
-                <span id="mScoreB">0</span>
-            </div>
-
-            <div class="time-box">
-                <h3>Time B</h3>
-                <div class="time" id="mTimeB">Time B</div>
-            </div>
-        </div>
-
-        <h3>Jogadores - Time A</h3>
-        <div id="jogadoresA" class="lista-jogadores"></div>
-
-        <h3>Jogadores - Time B</h3>
-        <div id="jogadoresB" class="lista-jogadores"></div>
-        <div class="container-botoes">
-        <button class="btn" onclick="finalizarPartida()">Finalizar</button>
-        <button class="btn btn-orange" onclick="fecharModal()">Fechar</button>
-        </div>
-    </div>
-</div>
-<script src="js/semifinal6.js"></script> 
+    <script src="js/semifinal6.js"></script> 
 </body>
 </html>

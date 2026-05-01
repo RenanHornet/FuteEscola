@@ -11,8 +11,6 @@ Data_Cadastro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 
 );
 
-DROP TABLE Cadastros;
-SELECT * from Cadastros;
 
 INSERT INTO Cadastros (Usuario, Email, Senha, Ativo)
 VALUES ('Lucas', 'Lucas@gmail.com', '1234', TRUE);
@@ -85,4 +83,5 @@ CREATE TABLE ranking (
     FOREIGN KEY (id_campeonato) REFERENCES campeonatos(id_campeonato),
     FOREIGN KEY (id_time) REFERENCES times(id_time)
 );
+
 

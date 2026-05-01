@@ -1,5 +1,4 @@
 
-/*limpa os dados do torneio anterior no navegador*/ 
 function limparDadosAntigos() {
     localStorage.removeItem("finalResults");
     localStorage.removeItem("artilharia");
@@ -11,7 +10,7 @@ function limparDadosAntigos() {
 
 let listaDeTimes = [];
 let contador = 1;
-
+/*cadastra os times no times6*/ 
 function adicionarTime() {
     
     const nomeTime = document.getElementById("nome-time").value.trim();
@@ -36,15 +35,12 @@ function adicionarTime() {
 
     console.log("Time adicionado:", nomeTime, "Total agora:", listaDeTimes.length);
 
-    // Se ainda não chegamos no 6º, prepara o próximo
     if (contador < 6) {
         contador++;
         document.getElementById("formTimes6").reset();
         document.getElementById("num-time").innerText = contador;
         document.getElementById("titulo-time").innerText = "Time " + contador;
         
-        // Se ACABOU de adicionar o 5º, o próximo será o 6º. 
-        // Vamos mostrar o botão de finalizar JUNTOS para o 6º time.
         if (contador === 6) {
             document.getElementById("btn-proximo").style.display = "none";
             document.getElementById("btn-finalizar").style.display = "block";
@@ -54,19 +50,17 @@ function adicionarTime() {
 
 /* Função de finalizar alterada para capturar o último time automaticamente */
 function finalizarCadastro() {
-    // Se o usuário clicar em finalizar e o 6º time ainda estiver no input, adiciona ele primeiro
+
     if (listaDeTimes.length === 5) {
         adicionarTime();
     }
 
-    // Agora verifica se realmente temos os 6
     if (listaDeTimes.length < 6) {
         alert("Erro: Você precisa preencher os dados do 6º time antes de finalizar!");
         return;
     }
 
-    limparDadosAntigos(); // Limpa os dados antigos antes de salvar o novo torneio    
-
+    limparDadosAntigos(); 
     // 1. Embaralhar
     listaDeTimes.sort(() => Math.random() - 0.5);
 

@@ -1,49 +1,42 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cadastro - FutEscola</title>
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - FutEscola</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
+    <main id="cadastro" class="screen">
+        <header>
+            <div class="logologin">
+                <img src="images/Logo_do_TCC-P2.png" alt="Logo FutEscola">
+            </div>
+            <h1 style="text-align: center;">Cadastre-se</h1>
+        </header>
 
-<div id="cadastro" class="screen">
+        <form id="formCadastro">
+            <input name="usuario" type="text" placeholder="Usuário" required aria-label="Nome de usuário">
 
-<h1>Cadastre-se</h1>
+            <input name="email" type="email" placeholder="Email" required aria-label="E-mail">
 
-<a class="logologin">
-<img src="images/Logo_do_TCC-P2.png" alt="Logo do site">
-</a>
+            <input name="senha" type="password" placeholder="Senha" required aria-label="Senha">
 
-<form id="formCadastro">
+            <div class="container-botoes" style="display: flex; flex-direction: column; align-items: center;">
+                <button type="submit" class="btn">CADASTRAR</button>
+                <div id="erroCadastro" style="color:red; margin-top:10px; text-align: center;"></div>
+            </div>
+        </form>
 
-<input name="usuario" type="text" placeholder="Usuário" required>
+        <footer>
+            <p style="text-align:center; margin-top:15px;">
+                <a href="index.html">Já tem conta? Entrar</a>
+            </p>
+        </footer>
 
-<input name="email" type="email" placeholder="Email" required>
+    </main>
 
-<input name="senha" type="password" placeholder="Senha" required>
-
-<div class="container-botoes">
-
-<button type="submit" class="btn">CADASTRAR</button>
-
-<div id="erroCadastro" style="color:red; margin-top:10px;"></div>
-
-</div>
-
-</form>
-
-<p style="text-align:center;margin-top:15px;">
-<a href="index.html">Já tem conta? Entrar</a>
-</p>
-
-</div>
-
-<script src="js/auth.js"></script>
-
+    <script src="js/auth.js"></script>
 </body>
 </html>

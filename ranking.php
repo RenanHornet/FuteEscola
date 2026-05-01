@@ -23,7 +23,6 @@
         <tr>
             <th>Posição</th>
             <th>Time</th>
-            <th>Pontos</th>
         </tr>
     </thead>
     <tbody>

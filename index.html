@@ -1,48 +1,52 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Login - FutEscola</title>
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FutEscola</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
+    <!-- Usamos o <main> com a sua classe .screen para manter o layout -->
+    <main id="login" class="screen">
+        
+        <!-- O cabeçalho interno da área de login -->
+        <header>
+            <div class="logologin">
+                <img src="images/Logo_do_TCC-P2.png" alt="Logo FutEscola">
+            </div>
 
-<div id="login" class="screen">
+            <h1 style="text-align: center;">Login</h1>
 
-<a class="logologin">
-<img src="images/Logo_do_TCC-P2.png" alt="Logo do site">
-</a>
+            <p class="frase-login">
+                <strong>Bem-vindo ao FutEscola</strong>
+                Gerencie torneios, partidas e rankings de forma simples e organizada.
+            </p>
+        </header>
 
-<h1>Login</h1>
+        <!-- O formulário de ação -->
+        <form id="formLogin">
+            <input name="email" type="email" placeholder="Email" required aria-label="E-mail">
 
-<p class="frase-login">
-<strong>Bem-vindo ao FutEscola</strong>
-Gerencie torneios, partidas e rankings de forma simples e organizada.
-</p>
+            <input name="senha" type="password" placeholder="Senha" required aria-label="Senha">
 
-<form id="formLogin">
+            <div class="container-botoes" style="display: flex; justify-content: center;">
+                <button type="submit" class="btn">ENTRAR</button>
+            </div>
 
-<input name="email" type="email" placeholder="Email" required>
+            <div id="erroLogin" style="color:red; text-align: center; margin-top:10px;"></div>
+        </form>
 
-<input name="senha" type="password" placeholder="Senha" required>
+        <!-- Rodapé do bloco de login para links auxiliares -->
+        <footer>
+            <p style="text-align:center; margin-top:15px;">
+                <a href="cadastro.php">Cadastrar-se</a>
+            </p>
+        </footer>
 
-<div class="container-botoes">
-<button type="submit" class="btn">ENTRAR</button>
-</div>
+    </main>
 
-<div id="erroLogin" style="color:red;margin-top:10px;"></div>
-
-</form>
-
-<p style="text-align:center;margin-top:15px;">
-<a href="cadastro.php">Cadastrar-se</a>
-</p>
-
-</div>
-
-<script src="js/auth.js"></script>
-
+    <script src="js/auth.js"></script>
 </body>
 </html>

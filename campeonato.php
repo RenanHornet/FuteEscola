@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,16 +7,27 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="navbar">
-        <a href="home.php">Home</a>
-        <a href="chaveamento.php">Chaveamento</a>
-        <a href="ranking.php">Ranking</a>
-        <a href="index.php">Sair</a>
-    </div>
-    <div id = "campeonato" class="screen active">
-        <h1>Novo Campeonato</h1>
-        <div class="formato">
-            <p class="frase"> <strong>Escolha o formato do campeonato:</strong></p>
+    <header>
+        <nav class="navbar">
+            <a href="home.php">Home</a>
+            <a href="chaveamento.php">Chaveamento</a>
+            <a href="ranking.php">Ranking</a>
+            <a href="index.html">Sair</a>
+        </nav>
+    </header>
+
+    <main id="campeonato" class="screen active">
+        <header>
+            <h1>Novo Campeonato</h1>
+        </header>
+
+        <section class="formato">
+            <article>
+                <p class="frase"> 
+                    <strong>Escolha o formato do campeonato:</strong>
+                </p>
+            </article>
+
             <div class="container-botoes">
                 <button class="btn" onclick="selecionarFormato(4)">
                     Campeonato Simples (4 times)
@@ -26,9 +36,9 @@
                     Por grupo (6 times)
                 </button>
             </div>    
-        </div>
+        </section>
+    </main>
 
-    </div>
-<script src="js/campeonato.js"></script>
+    <script src="js/campeonato.js"></script>
 </body>
 </html>
