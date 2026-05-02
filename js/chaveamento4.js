@@ -2,6 +2,8 @@ let placarA = 0;
 let placarB = 0;
 let jogoAtualModal = null;
 let todosOsTimes = JSON.parse(localStorage.getItem("times4")) || [];
+let modoCartaoAtivo = false;
+let cartoesPartida = {}; // Armazena quantos cartões cada jogador tem na partida atual
 
 // Gera o chaveamento inicial (semifinais)
 function gerarChaveamento(){
@@ -69,7 +71,17 @@ function abrirModal(jogo, fase){
 
 function fecharModal(){
     document.getElementById("modalPartida").style.display = "none";
+    // Reset de segurança dos cartões 
+    modoCartaoAtivo = false; 
+    cartoesPartida = {};     
+    
+    const btnToggle = document.getElementById("btn-modo-cartao");
+    if (btnToggle) {
+        btnToggle.classList.remove("ativo");
+        btnToggle.innerText = "Modo Cartão: OFF";
+    }
 }
+
 
 function addGol(time){
     if(time === "A"){
@@ -81,11 +93,11 @@ function addGol(time){
     }
 }
 /*Carrega jogadores no modal*/ 
-function carregarJogadoresModal(timeA, timeB){
+function carregarJogadoresModal(timeA, timeB) {
     const dados = JSON.parse(localStorage.getItem("times4")) || [];
 
-    const objTimeA = dados.find(t => t.time === timeA) || {jogadores: []};
-    const objTimeB = dados.find(t => t.time === timeB) || {jogadores: []};
+    const objTimeA = dados.find(t => t.time === timeA) || { jogadores: [] };
+    const objTimeB = dados.find(t => t.time === timeB) || { jogadores: [] };
 
     const divA = document.getElementById("jogadoresA");
     const divB = document.getElementById("jogadoresB");
@@ -93,19 +105,39 @@ function carregarJogadoresModal(timeA, timeB){
     divA.innerHTML = "";
     divB.innerHTML = "";
 
+    // Lógica para o Time A
     objTimeA.jogadores.forEach(jogador => {
         const btn = document.createElement("button");
         btn.textContent = jogador;
         btn.classList.add("jogador-btn");
-        btn.onclick = () => registrarGol(jogador, "A");
+        
+        // Sistema de cartões para o time A 
+        btn.onclick = () => {
+            if (modoCartaoAtivo) {
+                aplicarCartao(jogador, "A", btn);
+            } else {
+                registrarGol(jogador, "A");
+            }
+        };
+        
         divA.appendChild(btn);
     });
 
+    // Lógica para o Time B
     objTimeB.jogadores.forEach(jogador => {
         const btn = document.createElement("button");
         btn.textContent = jogador;
         btn.classList.add("jogador-btn2");
-        btn.onclick = () => registrarGol(jogador, "B");
+        
+        // Sistema de cartões para o time B 
+        btn.onclick = () => {
+            if (modoCartaoAtivo) {
+                aplicarCartao(jogador, "B", btn);
+            } else {
+                registrarGol(jogador, "B");
+            }
+        };
+        
         divB.appendChild(btn);
     });
 }
@@ -205,3 +237,50 @@ function finalizarTorneio(){
 document.addEventListener("DOMContentLoaded", () => {
     gerarChaveamento();
 });
+
+/*Implementação do modo cartão*/
+function alternarModoCartao() {
+    modoCartaoAtivo = !modoCartaoAtivo;
+    const btn = document.getElementById("btn-modo-cartao");
+    
+    if (modoCartaoAtivo) {
+        btn.classList.add("ativo");
+        btn.innerText = "Modo Cartão: ON 🟨";
+    } else {
+        btn.classList.remove("ativo");
+        btn.innerText = "Modo Cartão: OFF";
+    }
+}
+
+
+function aplicarCartao(nomeJogador, timeLetra, elementoBotao) {
+
+    const idUnico = `${timeLetra}-${nomeJogador}`;
+
+    // Se o jogador ainda não tem registro de cartões, iniciamos com 0
+    if (!cartoesPartida[idUnico]) {
+        cartoesPartida[idUnico] = 0;
+    }
+
+    // Incrementa a contagem
+    cartoesPartida[idUnico]++;
+
+    if (cartoesPartida[idUnico] === 1) {
+        // REGRA: 1º Cartão Amarelo
+        elementoBotao.classList.add("nome-amarelo");
+    } 
+    else if (cartoesPartida[idUnico] >= 2) {
+        // REGRA: 2º Amarelo = Vermelho (Expulsão)
+        elementoBotao.classList.remove("nome-amarelo");
+        elementoBotao.classList.add("nome-vermelho");
+        
+        // Desabilita o botão para que não possa mais marcar gols
+        elementoBotao.disabled = true; 
+        
+        alert(`O jogador ${nomeJogador} do Time ${timeLetra} foi expulso!`);
+    }
+
+    // Após aplicar a punição, desativa o "Modo Cartão" automaticamente
+    // para que o próximo clique volte a ser registro de GOL.
+    alternarModoCartao();
+}

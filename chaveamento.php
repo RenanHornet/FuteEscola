@@ -56,11 +56,19 @@
                 </div>
             </article>
 
+            <section class="controles-partida" aria-label="Controles de punição">
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <button id="btn-modo-cartao" class="btn-toggle-card" onclick="alternarModoCartao()">
+                        Modo Cartão: OFF
+                    </button>
+                </div>
+            </section>
+            <hr>
             <section>
                 <h3>Jogadores - Time A</h3>
                 <div id="jogadoresA" class="lista-jogadores"></div>
             </section>
-
+            <hr>
             <section>
                 <h3>Jogadores - Time B</h3>
                 <div id="jogadoresB" class="lista-jogadores"></div>

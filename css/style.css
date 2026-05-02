@@ -379,6 +379,14 @@ input:focus {
     opacity: .9;
 }
 
+hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, transparent, var(--primary), transparent);
+    margin: 20px 0;
+    opacity: 0.5;
+}
+
 
 /*tabela do ranking*/
 table {
@@ -431,3 +439,54 @@ tr:nth-child(even) {
     flex: 1.5; 
 }
 
+
+/* Classe para o nome do jogador com 1 amarelo */
+.nome-amarelo {
+    background-color: #f3f72c !important;
+    color: #000 !important;
+    border: 2px solid #f3f72c !important;
+    transform: scale(1.02); /* Leve destaque */
+}
+
+/* Jogador expulso */
+.nome-vermelho {
+    background-color: #f01505 !important;
+    color: #fff !important;
+    border: 2px solid #f01505 !important;
+    text-decoration: line-through;
+    opacity: 0.6;
+    cursor: not-allowed !important;
+}
+/* Estilo para o botão de cartão */
+/* O botão principal do modo cartão */
+.btn-toggle-card {
+    background-color: #f8f9fa;
+    border: 2px solid #dee2e6;
+    color: #495057;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-toggle-card:hover {
+    background-color: #e2e6ea;
+    border-color: #adb5bd;
+}
+
+/* Quando o modo está ligado */
+.btn-toggle-card.ativo {
+    background-color: #f3f72c; /* Amarelo */
+    border-color: #fbc02d;
+    color: #000;
+    box-shadow: 0 4px 12px rgba(251, 192, 45, 0.4);
+    transform: translateY(-2px); /* Efeito de levante */
+}
+
+.btn-toggle-card.ativo::before {
+    content: '⚠️'; /* Um ícone para reforçar o estado */
+}

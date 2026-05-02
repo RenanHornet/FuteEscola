@@ -1,3 +1,5 @@
+let modoCartaoAtivo = false;
+let cartoesPartida = {}; 
 /*Inicialização*/
 document.addEventListener("DOMContentLoaded", () => {
     const dados = JSON.parse(localStorage.getItem("torneioAtual"));
@@ -102,18 +104,37 @@ function carregarJogadoresModal(timeA, timeB) {
 function criarBotoesGols(jogadores, containerId, placarId, classeCor) {
     const container = document.getElementById(containerId);
     container.innerHTML = ""; 
+
     jogadores.forEach(nome => {
         const btn = document.createElement("button");
         btn.className = classeCor; 
         btn.innerText = nome;
+        
         btn.onclick = () => {
-            let placar = document.getElementById(placarId);
-            placar.innerText = parseInt(placar.innerText) + 1;
-            registrarGol(nome); // Chama sua função de artilharia
+            // Modo cartão: verifica se o interruptor está ligado
+            if (modoCartaoAtivo) {
+                const timeLetra = (containerId === "jogadoresA") ? "A" : "B";
+                aplicarCartao(nome, timeLetra, btn);
+            } 
+            else {
+                // Lógica do gol: executada se o modo cartão estiver OFF
+                let placar = document.getElementById(placarId);
+                placar.innerText = parseInt(placar.innerText) + 1;
+                registrarGol(nome); 
+            }
         };
+        
         container.appendChild(btn);
     });
 }
+
+function registrarGol(nomeJogador) {
+    let artilharia = JSON.parse(localStorage.getItem("artilharia")) || {};
+    if (!artilharia[nomeJogador]) artilharia[nomeJogador] = 0;
+    artilharia[nomeJogador]++;
+    localStorage.setItem("artilharia", JSON.stringify(artilharia));
+}
+
 
 function finalizarPartida() {
     const dados = JSON.parse(localStorage.getItem("torneioAtual"));
@@ -131,7 +152,10 @@ function finalizarPartida() {
 
 function fecharModal() {
     document.getElementById("modalPartida").style.display = "none";
+    modoCartaoAtivo = false;
+    cartoesPartida = {}; // Zera os cartões daquela partida específica
 }
+
 
 /* Função auxiliar para calcular o ranking e retornar os times ordenados */
 function obterClassificacao(grupo, partidas) {
@@ -179,4 +203,34 @@ function concluirFaseDeGrupos() {
     localStorage.setItem("semifinal6_dados", JSON.stringify(semifinalistas));
     alert("Fase de grupos concluída! Partiu Semifinais.");
     window.location.href = "semifinal6.php";
+}
+
+/*Função de cartões amarelos*/ 
+function alternarModoCartao() {
+    modoCartaoAtivo = !modoCartaoAtivo;
+    const btn = document.getElementById("btn-modo-cartao");
+    if (modoCartaoAtivo) {
+        btn.classList.add("ativo");
+        btn.innerText = "Modo Cartão: ON 🟨";
+    } else {
+        btn.classList.remove("ativo");
+        btn.innerText = "Modo Cartão: OFF";
+    }
+}
+
+function aplicarCartao(nomeJogador, timeLetra, elementoBotao) {
+    const idUnico = `${timeLetra}-${nomeJogador}`;
+    if (!cartoesPartida[idUnico]) cartoesPartida[idUnico] = 0;
+    
+    cartoesPartida[idUnico]++;
+
+    if (cartoesPartida[idUnico] === 1) {
+        elementoBotao.classList.add("nome-amarelo");
+    } else if (cartoesPartida[idUnico] >= 2) {
+        elementoBotao.classList.remove("nome-amarelo");
+        elementoBotao.classList.add("nome-vermelho");
+        elementoBotao.disabled = true; 
+        alert(`O jogador ${nomeJogador} foi expulso!`);
+    }
+    alternarModoCartao(); // Desativa o modo após o uso
 }

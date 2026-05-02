@@ -1,3 +1,6 @@
+let modoCartaoAtivo = false;
+let cartoesPartida = {};
+
 /*puxa as informações da semifinal*/
 let jogoAtualModal = null;
 let placarA = 0;
@@ -80,40 +83,52 @@ function abrirModal(jogo, fase){
 
 function fecharModal(){
     document.getElementById("modalPartida").style.display = "none";
+    placarA = 0; // Reset fundamental
+    placarB = 0; // Reset fundamental
+    modoCartaoAtivo = false;
+    cartoesPartida = {};
 }
 
 function carregarJogadoresModal(timeA, timeB) {
-    // Busca a lista completa dos 6 times para achar os jogadores
     const dadosGeral = JSON.parse(localStorage.getItem("torneioAtual"));
+    // Une os grupos para não dar erro de busca
     const todosOsTimes = [...dadosGeral.grupoA, ...dadosGeral.grupoB];
 
     const objTimeA = todosOsTimes.find(t => t.time === timeA) || { jogadores: [] };
     const objTimeB = todosOsTimes.find(t => t.time === timeB) || { jogadores: [] };
 
-    const divA = document.getElementById("jogadoresA");
-    const divB = document.getElementById("jogadoresB");
+    // Aqui ela distribui as tarefas para a função de cima
+    criarBotoesGols(objTimeA.jogadores, "jogadoresA", "mScoreA", "jogador-btn");
+    criarBotoesGols(objTimeB.jogadores, "jogadoresB", "mScoreB", "jogador-btn2");
+}
 
-    divA.innerHTML = "";
-    divB.innerHTML = "";
 
-    objTimeA.jogadores.forEach(jogador => {
+function criarBotoesGols(jogadores, containerId, placarId, classeCor) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = ""; 
+
+    jogadores.forEach(nome => {
         const btn = document.createElement("button");
-        btn.textContent = jogador;
-        btn.classList.add("jogador-btn");
-        btn.onclick = () => registrarGol(jogador, "A");
-        divA.appendChild(btn);
-    });
-
-    objTimeB.jogadores.forEach(jogador => {
-        const btn = document.createElement("button");
-        btn.textContent = jogador;
-        btn.classList.add("jogador-btn2");
-        btn.onclick = () => registrarGol(jogador, "B");
-        divB.appendChild(btn);
+        btn.className = classeCor; 
+        btn.innerText = nome;
+        
+        btn.onclick = () => {
+            if (modoCartaoAtivo) {
+                const timeLetra = (containerId === "jogadoresA") ? "A" : "B";
+                aplicarCartao(nome, timeLetra, btn);
+            } 
+            else {
+                // Descobre o lado para atualizar a variável correta
+                const lado = (containerId === "jogadoresA") ? "A" : "B";
+                registrarGol(nome, lado); 
+            }
+        };
+        container.appendChild(btn);
     });
 }
 
-function addGol(lado) {
+function registrarGol(nomeJogador, lado) {
+    // Atualiza as variáveis globais que a função finalizarPartida utiliza
     if (lado === "A") {
         placarA++;
         document.getElementById("mScoreA").textContent = placarA;
@@ -121,10 +136,8 @@ function addGol(lado) {
         placarB++;
         document.getElementById("mScoreB").textContent = placarB;
     }
-}
 
-function registrarGol(nomeJogador, lado) {
-    addGol(lado);
+    // Salva na artilharia
     let artilharia = JSON.parse(localStorage.getItem("artilharia")) || {};
     if (!artilharia[nomeJogador]) artilharia[nomeJogador] = 0;
     artilharia[nomeJogador]++;
@@ -216,4 +229,35 @@ function finalizarTorneio() {
         return;
     }
     window.location.href = "ranking.php";
+}
+
+/*Implementação do modo cartão*/
+function alternarModoCartao() {
+    modoCartaoAtivo = !modoCartaoAtivo;
+    const btn = document.getElementById("btn-modo-cartao");
+    
+    if (modoCartaoAtivo) {
+        btn.classList.add("ativo");
+        btn.innerText = "Modo Cartão: ON 🟨";
+    } else {
+        btn.classList.remove("ativo");
+        btn.innerText = "Modo Cartão: OFF";
+    }
+}
+
+function aplicarCartao(nomeJogador, timeLetra, elementoBotao) {
+    const idUnico = `${timeLetra}-${nomeJogador}`;
+    if (!cartoesPartida[idUnico]) cartoesPartida[idUnico] = 0;
+    
+    cartoesPartida[idUnico]++;
+
+    if (cartoesPartida[idUnico] === 1) {
+        elementoBotao.classList.add("nome-amarelo");
+    } else if (cartoesPartida[idUnico] >= 2) {
+        elementoBotao.classList.remove("nome-amarelo");
+        elementoBotao.classList.add("nome-vermelho");
+        elementoBotao.disabled = true; 
+        alert(`O jogador ${nomeJogador} foi expulso!`);
+    }
+    alternarModoCartao(); // Desativa o modo após o uso
 }
