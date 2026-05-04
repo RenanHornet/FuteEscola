@@ -490,3 +490,35 @@ tr:nth-child(even) {
 .btn-toggle-card.ativo::before {
     content: '⚠️'; /* Um ícone para reforçar o estado */
 }
+
+/*Estilo para o container de faltas no modal*/
+.faltas-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 0;
+    padding: 5px;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.faltas-checks {
+    display: flex; 
+    flex-direction: row; 
+    gap: 8px;
+    
+}
+
+
+.faltas-checks input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    
+}
+
+
+.check-perigo:checked {
+    accent-color: red; /* O checkbox fica vermelho quando a 5ª falta é marcada */
+}

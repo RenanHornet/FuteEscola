@@ -9,10 +9,12 @@
 <body>
     <header>
         <nav class="navbar">
-            <a href="home.php">Home</a>
-            <a href="chaveamento.php">Chaveamento</a>
+              <a href="home.php">Home</a>
+            <a href="campeonato.php">Novo Campeonato</a>
+            <a href="chaveamento.php">Chaveamento Simples</a>
+            <a href="semifinal6.php">Semifinal Grupos</a>
             <a href="ranking.php">Ranking</a>
-            <a href="index.html">Sair</a>
+            <a href="index.html" onclick="logout(event)">Sair</a>
         </nav>
     </header>
 

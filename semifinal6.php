@@ -9,10 +9,11 @@
 <body>
     <header>
         <nav class="navbar" style="display:flex">
-            <a href="home.php">Home</a>
-            <a href="chaveamento.php">Chaveamento</a>
-            <a href="ranking.php">Ranking</a>
-            <a href="index.html">Sair</a>
+        <a href="home.php">Home</a>
+        <a href="campeonato.php">Novo Campeonato</a>
+        <a href="chaveamento6.php">Chaveamento Grupos</a>
+        <a href="ranking.php" aria-current="page">Ranking</a>
+        <a href="index.html" onclick="logout(event)">Sair</a>
         </nav>
     </header>
 
@@ -67,11 +68,31 @@
                 </div>
             </section>
             <hr>
+            <section class="faltas-container">
+                <span>Faltas Coletivas:</span>
+                <div class="faltas-checks">
+                    <input type="checkbox" aria-label="Falta 1">
+                    <input type="checkbox" aria-label="Falta 2">
+                    <input type="checkbox" aria-label="Falta 3">
+                    <input type="checkbox" aria-label="Falta 4">
+                    <input type="checkbox" class="check-perigo" aria-label="Falta 5 - Limite">
+                </div>
+            </section>
             <section>
                 <h3>Jogadores - Time A</h3>
                 <div id="jogadoresA" class="lista-jogadores"></div>
             </section>
             <hr>
+            <section class="faltas-container">
+                <span>Faltas Coletivas:</span>
+                <div class="faltas-checks">
+                    <input type="checkbox" aria-label="Falta 1">
+                    <input type="checkbox" aria-label="Falta 2">
+                    <input type="checkbox" aria-label="Falta 3">
+                    <input type="checkbox" aria-label="Falta 4">
+                    <input type="checkbox" class="check-perigo" aria-label="Falta 5 - Limite">
+                </div>
+            </section>
             <section>
                 <h3>Jogadores - Time B</h3>
                 <div id="jogadoresB" class="lista-jogadores"></div>

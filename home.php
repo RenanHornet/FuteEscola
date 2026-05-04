@@ -22,7 +22,8 @@ if(!isset($_SESSION['usuario'])){
         <nav class="navbar">
             <a href="home.php">Home</a>
             <a href="campeonato.php">Novo Campeonato</a>
-            <a href="chaveamento.php">Chaveamento</a>
+            <a href="chaveamento.php">Chaveamento Simples</a>
+            <a href="semifinal6.php">Semifinal Grupos</a>
             <a href="ranking.php">Ranking</a>
             <a href="index.html" onclick="logout(event)">Sair</a>
         </nav>
@@ -37,6 +38,10 @@ if(!isset($_SESSION['usuario'])){
         </header>
 
         <article>
+            <p class="frase">
+                    Bem-vindo,
+                    <strong><?php echo $_SESSION['usuario_nome']; ?></strong>
+            </p>
             <p class="frase">
                 <strong>Uma proposta mais moderna para seu interclasse!</strong>
             </p>
