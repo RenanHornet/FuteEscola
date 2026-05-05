@@ -13,7 +13,7 @@
         <a href="campeonato.php">Novo Campeonato</a>
         <a href="chaveamento6.php">Chaveamento Grupos</a>
         <a href="ranking.php" aria-current="page">Ranking</a>
-        <a href="index.html" onclick="logout(event)">Sair</a>
+        <a href="../index.html" onclick="logout(event)">Sair</a>
         </nav>
     </header>
 

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chaveamento 6 Times - FutEscola</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
     
@@ -14,7 +14,7 @@
             <a href="campeonato.php">Novo Campeonato</a>
             <a href="semifinal6.php">Semifinal Grupos</a>
             <a href="ranking.php">Ranking</a>
-            <a href="index.html" onclick="logout(event)">Sair</a>
+            <a href="../index.html" onclick="logout(event)">Sair</a>
         </nav>
     </header>
     
@@ -138,6 +138,6 @@
         </div>
     </section>    
 
-    <script src="js/chaveamento6.js"></script>
+    <script src="../js/chaveamento6.js"></script>
 </body>
 </html>

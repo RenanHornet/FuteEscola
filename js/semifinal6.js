@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     if (!dados) {
         alert("Dados da seminfinal não encontrados!");
-        window.location.href = "chaveamento6.html";
+        window.location.href = "../php/chaveamento6.php";
         return;
     }
     renderizarSemifinais(dados);
@@ -228,7 +228,7 @@ function finalizarTorneio() {
         alert("Finalize a Final e a Disputa de 3º lugar!");
         return;
     }
-    window.location.href = "ranking.php";
+    window.location.href = "../php/ranking.php";
 }
 
 /*Implementação do modo cartão*/

@@ -7,11 +7,6 @@ console.log("Home carregada");
 function logout(e){
 e.preventDefault();
 
-```
-fetch("php/logout.php")
-.then(() => {
-    window.location.href = "index.html";
-});
-```
+
 
 }

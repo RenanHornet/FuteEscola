@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chaveamento - FutEscola</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
     <header>
@@ -12,7 +12,7 @@
             <a href="home.php">Home</a>
             <a href="campeonato.php">Novo Campeonato</a>
             <a href="ranking.php">Ranking</a>
-            <a href="index.html" onclick="logout(event)">Sair</a>
+            <a href="../index.html" onclick="logout(event)">Sair</a>
         </nav>
     </header>
 
@@ -101,6 +101,6 @@
         </div>
     </section>
 
-    <script src="js/chaveamento4.js"></script>    
+    <script src="../js/chaveamento4.js"></script>    
 </body>
 </html>

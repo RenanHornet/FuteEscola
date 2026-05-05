@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Novo Campeonato - FutEscola</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
     <header>
         <nav class="navbar">
-              <a href="home.php">Home</a>
-            <a href="campeonato.php">Novo Campeonato</a>
-            <a href="chaveamento.php">Chaveamento Simples</a>
-            <a href="semifinal6.php">Semifinal Grupos</a>
-            <a href="ranking.php">Ranking</a>
-            <a href="index.html" onclick="logout(event)">Sair</a>
+            <a href="../php/home.php">Home</a>
+            <a href="../php/campeonato.php">Novo Campeonato</a>
+            <a href="../php/chaveamento.php">Chaveamento Simples</a>
+            <a href="../php/semifinal6.php">Semifinal Grupos</a>
+            <a href="../php/ranking.php">Ranking</a>
+            <a href="../index.html" onclick="logout(event)">Sair</a>
         </nav>
     </header>
 
@@ -41,6 +41,6 @@
         </section>
     </main>
 
-    <script src="js/campeonato.js"></script>
+    <script src="../js/campeonato.js"></script>
 </body>
 </html>

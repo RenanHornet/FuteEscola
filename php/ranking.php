@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking Final - Torneio</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
     <!-- Navbar com semântica de navegação -->
@@ -14,7 +14,7 @@
         <a href="chaveamento.php">Chaveamento Simples</a>
         <a href="semifinal6.php">Semifinal Grupos</a>
         <a href="ranking.php" aria-current="page">Ranking</a>
-        <a href="index.html" onclick="logout(event)">Sair</a>
+        <a href="../index.html" onclick="logout(event)">Sair</a>
     </nav>
 
     <main id="ranking" class="screen container">
@@ -49,6 +49,6 @@
         </section>
     </main>
 
-    <script src="js/ranking.js"></script>
+    <script src="../js/ranking.js"></script>
 </body>
 </html>

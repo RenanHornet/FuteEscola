@@ -58,5 +58,5 @@ function salvarTimes4(){
     localStorage.setItem("times4", JSON.stringify(times));
 
     /*redireciona*/
-    window.location.href = "chaveamento.php";
+    window.location.href = "../php/chaveamento.php";
 }

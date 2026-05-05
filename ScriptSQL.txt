@@ -12,10 +12,6 @@ Data_Cadastro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 
-INSERT INTO Cadastros (Usuario, Email, Senha, Ativo)
-VALUES ('Lucas', 'Lucas@gmail.com', '1234', TRUE);
-
-
 CREATE TABLE escolas (
     id_escola INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(150) NOT NULL,

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <title>Times6 - Cadastro de Grupos</title>
 </head>
 <body>
@@ -42,6 +42,6 @@
         </form>
     </main>
 
-    <script src="js/times6.js"></script>            
+    <script src="../js/times6.js"></script>            
 </body>
 </html>

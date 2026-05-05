@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - FutEscola</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
@@ -31,12 +31,12 @@
 
         <footer>
             <p style="text-align:center; margin-top:15px;">
-                <a href="index.html">Já tem conta? Entrar</a>
+                <a href="/index.html">Já tem conta? Entrar</a>
             </p>
         </footer>
 
     </main>
 
-    <script src="js/auth.js"></script>
+    <script src="/js/auth.js"></script>
 </body>
 </html>
