@@ -11,7 +11,7 @@
     <main id="cadastro" class="screen">
         <header>
             <div class="logologin">
-                <img src="images/Logo_do_TCC-P2.png" alt="Logo FutEscola">
+                <img src="/FutEscola/images/Logo_do_TCC-P2.png">
             </div>
             <h1 style="text-align: center;">Cadastre-se</h1>
         </header>
