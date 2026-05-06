@@ -8,37 +8,36 @@ const formCadastro = document.querySelector("#formCadastro");
 
 if (formCadastro) {
 
+const apiBase = window.location.pathname.includes("/php/") ? "../php/" : "php/";
+const cadastrarUrl = apiBase + "cadastrar.php";
+const loginPage = window.location.pathname.includes("/php/") ? "../index.html" : "index.html";
+
 formCadastro.addEventListener("submit", function(e) {
 
-e.preventDefault();
+    e.preventDefault();
 
-const formData = new FormData(formCadastro);
+    const formData = new FormData(formCadastro);
 
-fetch("php/cadastrar.php", {
-method: "POST",
-body: formData
-})
-.then(response => response.json())
-.then(data => {
+    fetch(cadastrarUrl, {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
 
-if (data.status === "erro") {
+        if (data.status === "erro") {
+            document.getElementById("erroCadastro").innerText = data.mensagem || "Erro ao cadastrar.";
+            return;
+        }
 
-document.getElementById("erroCadastro").innerText = data.mensagem;
+        if (data.status === "sucesso") {
+            window.location.href = loginPage;
+        }
 
-}
-
-if (data.status === "sucesso") {
-
-window.location.href = "index.html";
-
-}
-
-})
-.catch(error => {
-
-document.getElementById("erroCadastro").innerText = "Erro ao conectar com o servidor.";
-
-});
+    })
+    .catch(error => {
+        document.getElementById("erroCadastro").innerText = "Erro ao conectar com o servidor.";
+    });
 
 });
 

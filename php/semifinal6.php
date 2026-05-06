@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Semifinal - FutEscola</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
     <header>
         <nav class="navbar" style="display:flex">
-        <a href="home.php">Home</a>
-        <a href="campeonato.php">Novo Campeonato</a>
-        <a href="chaveamento6.php">Chaveamento Grupos</a>
-        <a href="ranking.php" aria-current="page">Ranking</a>
+        <a href="../php/home.php">Home</a>
+        <a href="../php/campeonato.php">Novo Campeonato</a>
+        <a href="../php/chaveamento6.php">Chaveamento Grupos</a>
+        <a href="../php/ranking.php" aria-current="page">Ranking</a>
         <a href="../index.html" onclick="logout(event)">Sair</a>
         </nav>
     </header>
@@ -106,6 +106,6 @@
     </section>
 
 
-    <script src="js/semifinal6.js"></script> 
+    <script src="../js/semifinal6.js"></script> 
 </body>
 </html>

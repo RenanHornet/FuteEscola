@@ -11,7 +11,7 @@
     <main id="cadastro" class="screen">
         <header>
             <div class="logologin">
-                <img src="/FutEscola/images/Logo_do_TCC-P2.png">
+                <img src="../images/Logo_do_TCC-P2.png">
             </div>
             <h1 style="text-align: center;">Cadastre-se</h1>
         </header>
@@ -31,12 +31,12 @@
 
         <footer>
             <p style="text-align:center; margin-top:15px;">
-                <a href="/index.html">Já tem conta? Entrar</a>
+                <a href="../index.html">Já tem conta? Entrar</a>
             </p>
         </footer>
 
     </main>
 
-    <script src="/js/auth.js"></script>
+    <script src="../js/auth.js"></script>
 </body>
 </html>
