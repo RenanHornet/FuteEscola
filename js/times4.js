@@ -4,8 +4,8 @@ function iniciarNovoTorneio() {
     localStorage.removeItem("finalResults");
     localStorage.removeItem("artilharia");
     localStorage.removeItem("resultadosSemi");
-    localStorage.removeItem("torneioAtual");//limpa o torneio 6 times
-    
+    localStorage.removeItem("torneioAtual"); // limpa o de 6 times
+    localStorage.removeItem("times4");       // ADICIONE ESTA LINHA: limpa o de 4 times anterior
 }
 
 
@@ -19,44 +19,68 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 /*função que salva os times*/ 
 function salvarTimes4(){
-    iniciarNovoTorneio(); // Limpa os dados anteriores 
+    iniciarNovoTorneio(); // Limpa os dados anteriores
     const times = [];
 
-    document.querySelectorAll(".card-time").forEach((card) => {
-        const inputs = card.querySelectorAll("input");
+    // 1. Captura o nome do campeonato do novo campo HTML
+    const nomeCampInput = document.getElementById("nome-campeonato");
+    const nomeCampeonato = nomeCampInput ? nomeCampInput.value.trim() : "";
 
-        const nomeTime = inputs[0].value.trim();
+    // 2. Coleta os dados de cada time nos cards
+    document.querySelectorAll("fieldset.card-time").forEach((card) => {
+    const inputNomeTime = card.querySelector(".nomes-times");
+
+    // IMPORTANTE: Só entra aqui se houver um input de nome de time (evita pegar o card do título)
+    if (inputNomeTime) {
+        const nomeTime = inputNomeTime.value.trim();
+        
+        // Pega apenas os inputs que estão DEPOIS do nome do time (jogadores)
+        const inputsJogadores = card.querySelectorAll("input:not(.nomes-times)");
         const jogadores = [];
 
-        for(let i = 1; i < inputs.length; i++){
-            if(inputs[i].value.trim() !== ""){
-                jogadores.push(inputs[i].value.trim());
+        inputsJogadores.forEach(input => {
+            if (input.value.trim() !== "" && input.id !== "nome-campeonato") {
+                jogadores.push(input.value.trim());
             }
-        }
+        });
 
-        if(nomeTime !== ""){
+        if (nomeTime !== "") {
             times.push({
                 time: nomeTime,
                 jogadores: jogadores
             });
         }
-    });
+    }
+});
 
-    /*validação*/
-    if(times.length < 4){
-        alert("Cadastre os 4 times para gerar o chaveamento!");
+    // 3. Validação: Nome do torneio e quantidade de times
+    if (nomeCampeonato === "" || times.length < 4) {
+        alert("Por favor, dê um nome ao torneio e cadastre os 4 times!");
         return;
     }
 
-    /*embaralhar (shuffle)*/
+    // 4. EMBARALHAR (Shuffle)
+    // O sorteio é feito aqui para que a ordem aleatória seja salva no banco
     for (let i = times.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [times[i], times[j]] = [times[j], times[i]];
     }
 
-    /*salva no navegador*/
-    localStorage.setItem("times4", JSON.stringify(times));
+    // 5. Estrutura o objeto final com o nome e os times sorteados
+    const dadosMataMata = {
+        nome: nomeCampeonato,
+        times: times
+    };
 
-    /*redireciona*/
-    window.location.href = "../php/chaveamento.php";
+    // 6. Salva no navegador (localStorage)
+    localStorage.setItem("times4", JSON.stringify(dadosMataMata));
+
+    // 7. Chama a função do save4.js para persistir no Banco de Dados
+    salvarCampeonato4();
+
+    // 8. Redireciona com um pequeno delay para garantir o envio do banco
+    setTimeout(() => {
+        window.location.href = "../php/chaveamento.php";
+    }, 500);
 }
+

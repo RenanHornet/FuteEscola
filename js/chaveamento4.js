@@ -1,7 +1,8 @@
 let placarA = 0;
 let placarB = 0;
 let jogoAtualModal = null;
-let todosOsTimes = JSON.parse(localStorage.getItem("times4")) || [];
+const storageTimes4 = JSON.parse(localStorage.getItem("times4"));
+let todosOsTimes = (storageTimes4 && storageTimes4.times) ? storageTimes4.times : [];
 let modoCartaoAtivo = false;
 let cartoesPartida = {}; // Armazena quantos cartões cada jogador tem na partida atual
 
@@ -10,22 +11,24 @@ function gerarChaveamento(){
     const container = document.getElementById("chaves");
     container.innerHTML = ""; 
 
-    let times = JSON.parse(localStorage.getItem("times4"));
-    if(!times || times.length < 4){
-        alert("Cadastre os 4 times para gerar o chaveamento!");
-        return;
+    const dadosSalvos = JSON.parse(localStorage.getItem("times4"));
+    if(!dadosSalvos || !dadosSalvos.times) return;
+
+    // 1. Pegamos a lista de times
+    let times = dadosSalvos.times;
+
+    // 2. VERIFICAÇÃO DE PERSISTÊNCIA: 
+    // Se já existirem resultados salvos, NÃO sorteamos de novo.
+    // Isso evita que o F5 mude os jogos que já começaram.
+    const semiSalva = JSON.parse(localStorage.getItem("resultadosSemi"));
+    
+    if (!semiSalva) {
+        // Só sorteia se for a primeiríssima vez que entra na tela
+        times.sort(() => Math.random() - 0.5);
+        // Atualizamos o storage com a ordem sorteada para o F5 manter a mesma ordem
+        localStorage.setItem("times4", JSON.stringify(dadosSalvos));
     }
 
-    // Limpa dados antigos
-    localStorage.removeItem("resultadosSemi");
-    localStorage.removeItem("finaisGeradas");
-    localStorage.removeItem("finalResults");
-    localStorage.removeItem("artilharia");
-
-    // Embaralha times
-    times.sort(() => Math.random() - 0.5);
-
-    // Cria jogos da semifinal
     const jogo1 = [times[0], times[1]];
     const jogo2 = [times[2], times[3]];
 
@@ -92,12 +95,17 @@ function addGol(time){
         document.getElementById("mScoreB").textContent = placarB;
     }
 }
-/*Carrega jogadores no modal*/ 
+/* Carrega jogadores no modal */ 
 function carregarJogadoresModal(timeA, timeB) {
-    const dados = JSON.parse(localStorage.getItem("times4")) || [];
+    // 1. Pega o objeto completo
+    const dadosSalvos = JSON.parse(localStorage.getItem("times4"));
+    
+    // 2. Extrai a lista de times de forma segura
+    const listaTimes = (dadosSalvos && dadosSalvos.times) ? dadosSalvos.times : [];
 
-    const objTimeA = dados.find(t => t.time === timeA) || { jogadores: [] };
-    const objTimeB = dados.find(t => t.time === timeB) || { jogadores: [] };
+    // 3. Busca os times dentro da lista extraída
+    const objTimeA = listaTimes.find(t => t.time === timeA) || { jogadores: [] };
+    const objTimeB = listaTimes.find(t => t.time === timeB) || { jogadores: [] };
 
     const divA = document.getElementById("jogadoresA");
     const divB = document.getElementById("jogadoresB");
@@ -105,42 +113,25 @@ function carregarJogadoresModal(timeA, timeB) {
     divA.innerHTML = "";
     divB.innerHTML = "";
 
-    // Lógica para o Time A
+    // Lógica do Time A
     objTimeA.jogadores.forEach(jogador => {
         const btn = document.createElement("button");
         btn.textContent = jogador;
         btn.classList.add("jogador-btn");
-        
-        // Sistema de cartões para o time A 
-        btn.onclick = () => {
-            if (modoCartaoAtivo) {
-                aplicarCartao(jogador, "A", btn);
-            } else {
-                registrarGol(jogador, "A");
-            }
-        };
-        
+        btn.onclick = () => modoCartaoAtivo ? aplicarCartao(jogador, "A", btn) : registrarGol(jogador, "A");
         divA.appendChild(btn);
     });
 
-    // Lógica para o Time B
+    // Lógica do Time B
     objTimeB.jogadores.forEach(jogador => {
         const btn = document.createElement("button");
         btn.textContent = jogador;
         btn.classList.add("jogador-btn2");
-        
-        // Sistema de cartões para o time B 
-        btn.onclick = () => {
-            if (modoCartaoAtivo) {
-                aplicarCartao(jogador, "B", btn);
-            } else {
-                registrarGol(jogador, "B");
-            }
-        };
-        
+        btn.onclick = () => modoCartaoAtivo ? aplicarCartao(jogador, "B", btn) : registrarGol(jogador, "B");
         divB.appendChild(btn);
     });
 }
+
 /*registra gol do jogador*/ 
 function registrarGol(nomeJogador, lado){
     addGol(lado);
@@ -200,14 +191,19 @@ function finalizarPartida(){
 /*gera finais*/
 function gerarFinais(resultadosSemi){
     const container = document.getElementById("chaves");
-    container.innerHTML = ""; // limpa cards antigos
+    container.innerHTML = ""; 
+
+    // Atualiza a referência dos times para garantir que pegamos os objetos com jogadores
+    const dadosFinais = JSON.parse(localStorage.getItem("times4"));
+    const listaFinais = (dadosFinais && dadosFinais.times) ? dadosFinais.times : [];
 
     const vencedores = [];
     const perdedores = [];
 
     resultadosSemi.forEach(jogo => {
-        let objTimeA = todosOsTimes.find(t => t.time === jogo.timeA);
-        let objTimeB = todosOsTimes.find(t => t.time === jogo.timeB);
+        // Busca na lista correta
+        let objTimeA = listaFinais.find(t => t.time === jogo.timeA);
+        let objTimeB = listaFinais.find(t => t.time === jogo.timeB);
 
         if(jogo.golsA > jogo.golsB){
             vencedores.push(objTimeA);
@@ -218,7 +214,6 @@ function gerarFinais(resultadosSemi){
         }
     });
 
-    // Cria cards da Final e 3º lugar passando objetos completos
     criarJogo(container, [vencedores[0], vencedores[1]], "Final");
     criarJogo(container, [perdedores[0], perdedores[1]], "3º lugar");
 }

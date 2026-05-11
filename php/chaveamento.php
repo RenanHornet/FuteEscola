@@ -24,6 +24,13 @@
         <section class="grid" id="chaves" aria-live="polite">
             <!-- O JS preenche o chaveamento aqui -->
         </section>
+        <section>
+            <div style="text-align: center; margin: 20px;">
+                <button onclick="salvarCampeonato4()" class="btn" style="background-color: #007bff; color: white;">
+                    💾 Salvar Resultados e Artilharia
+                </button>
+            </div>
+        </section>
 
         <footer class="container-botoes">
             <button class="btn" onclick="finalizarTorneio()">
@@ -100,7 +107,8 @@
             </footer>
         </div>
     </section>
-
+   
+    <script src="../js/save4.js"></script>
     <script src="../js/chaveamento4.js"></script>    
 </body>
 </html>

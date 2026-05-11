@@ -7,8 +7,6 @@
     <title>Cadastro de times - Mata-mata</title>
 </head>
 <body>
-    <!-- Como esta página não tem a navbar no seu código original, 
-         vamos direto para o conteúdo principal -->
     <main id="times4" class="screen" style="display: block;">
         
         <header>
@@ -16,15 +14,16 @@
         </header>
 
         <form id="formTimes4">
-            <!-- Time 1 -->
-            <!-- O fieldset agrupa os inputs de cada time semânticamente -->
+            <fieldset class="card-config">
+                <legend><h2>Configuração do Torneio</h2></legend>
+                <label for="nome-campeonato">Nome do Campeonato:</label>
+                <input class= "nomes-times"type="text" id="nome-campeonato" placeholder="Ex: Interclasse 2026 - 7º Ano" required aria-label="Nome do Campeonato">
+            </fieldset>
+
             <fieldset class="card-time">
                 <legend><h2>Time 1</h2></legend>
-                
                 <input class="nomes-times" type="text" placeholder="Nome do time" required aria-label="Nome do Time 1">
                 <hr>
-                
-                <!-- Inputs de jogadores com aria-label para acessibilidade -->
                 <input type="text" placeholder="Nome do jogador 1" aria-label="Jogador 1 do Time 1">
                 <input type="text" placeholder="Nome do jogador 2" aria-label="Jogador 2 do Time 1">
                 <input type="text" placeholder="Nome do jogador 3" aria-label="Jogador 3 do Time 1">
@@ -35,7 +34,6 @@
                 <input type="text" placeholder="Nome do jogador 8" aria-label="Jogador 8 do Time 1">
             </fieldset>
 
-            <!-- Time 2 -->
             <fieldset class="card-time">
                 <legend><h2>Time 2</h2></legend>
                 <input class="nomes-times" type="text" placeholder="Nome do time" required aria-label="Nome do Time 2">
@@ -50,7 +48,6 @@
                 <input type="text" placeholder="Nome do jogador 8" aria-label="Jogador 8 do Time 2">
             </fieldset>
 
-            <!-- Time 3 -->
             <fieldset class="card-time">
                 <legend><h2>Time 3</h2></legend>
                 <input class="nomes-times" type="text" placeholder="Nome do time" required aria-label="Nome do Time 3">
@@ -65,7 +62,6 @@
                 <input type="text" placeholder="Nome do jogador 8" aria-label="Jogador 8 do Time 3">
             </fieldset>
 
-            <!-- Time 4 -->
             <fieldset class="card-time">
                 <legend><h2>Time 4</h2></legend>
                 <input class="nomes-times" type="text" placeholder="Nome do time" required aria-label="Nome do Time 4">
@@ -88,6 +84,7 @@
         </form>
     </main>
     
-    <script src="../js/times4.js"></script>    
+    <script src="../js/save4.js"></script>  
+    <script src="../js/times4.js"></script>  
 </body>
 </html>

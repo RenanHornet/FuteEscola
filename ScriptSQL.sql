@@ -11,13 +11,27 @@ Data_Cadastro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 
 );
 
+-- -----------------------------------------------------
+-- Tabela para o Sistema de Save Game (MVP)
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS saves_campeonatos (
+    id_save INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    nome_torneio VARCHAR(150) NOT NULL,
+    dados_json LONGTEXT NOT NULL,
+    data_save DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    -- UNIQUE para garantir que cada usuário tenha apenas um "slot" de save ativo por vez
+    -- Se ele salvar um novo, o PHP fará o UPDATE no mesmo registro.
+    UNIQUE KEY (id_usuario), 
+    
+    -- Relaciona o save ao usuário logado
+    CONSTRAINT fk_save_usuario 
+    FOREIGN KEY (id_usuario) 
+    REFERENCES Cadastros (ID_Cadastro) 
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE escolas (
-    id_escola INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(150) NOT NULL,
-    cidade VARCHAR(100),
-    estado CHAR(2)
-);
 
 
 CREATE TABLE campeonatos (

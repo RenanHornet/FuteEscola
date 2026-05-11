@@ -86,3 +86,38 @@ document.getElementById("erroLogin").innerText = "Erro ao conectar com o servido
 }
 
 });
+
+/*--------CARREGA O TORNEIO---------*/
+function carregarCampeonatoDoBanco() {
+    fetch("../php/carregar_progresso.php")
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "sucesso") {
+            // Transforma a string de volta em objeto
+            const backup = JSON.parse(data.dados);
+            
+            // Limpa o navegador para não misturar dados
+            localStorage.clear();
+            
+            // Restaura cada item (times, artilharia, resultados, etc)
+            for (let chave in backup) {
+                localStorage.setItem(chave, backup[chave]);
+            }
+
+            alert("Progresso recuperado com sucesso!");
+
+            // Redirecionamento Inteligente
+            if (localStorage.getItem("times4")) {
+                window.location.href = "chaveamento.php";
+            } else if (localStorage.getItem("torneioAtual")) {
+                window.location.href = "chaveamento6.php";
+            }
+        } else {
+            alert(data.mensagem);
+        }
+    })
+    .catch(err => {
+        console.error("Erro:", err);
+        alert("Erro ao conectar com o servidor.");
+    });
+}

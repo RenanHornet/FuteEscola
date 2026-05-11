@@ -37,6 +37,11 @@
             <p class="frase">
                 <strong>Uma proposta mais moderna para seu interclasse!</strong>
             </p>
+            <div style="margin-top: 30px; text-align: center;">
+                <button onclick="carregarCampeonatoDoBanco()" class="btn">
+                    ⚽ Continuar Campeonato Salvo
+                </button>
+            </div>
         </article>
     </main>
 
