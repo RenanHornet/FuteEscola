@@ -26,7 +26,7 @@
         </section>
         <section>
             <div style="text-align: center; margin: 20px;">
-                <button onclick="salvarCampeonato4()" class="btn" style="background-color: #007bff; color: white;">
+                <button onclick="salvarCampeonato4()" class="btn-salvar">
                     💾 Salvar Resultados e Artilharia
                 </button>
             </div>
