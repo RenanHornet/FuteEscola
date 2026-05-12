@@ -1,11 +1,40 @@
 let placarA = 0;
 let placarB = 0;
 let jogoAtualModal = null;
-const storageTimes4 = JSON.parse(localStorage.getItem("times4"));
-let todosOsTimes = (storageTimes4 && storageTimes4.times) ? storageTimes4.times : [];
 let modoCartaoAtivo = false;
-let cartoesPartida = {}; // Armazena quantos cartões cada jogador tem na partida atual
+let cartoesPartida = {}; 
 
+document.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const idSave = urlParams.get('id');
+
+    if (idSave) {
+        // Se abriu via "Meus Campeonatos", força o carregamento do banco
+        fetch(`../php/carregar_progresso.php?id_save=${idSave}`)
+            .then(res => res.json())
+            .then(res => {
+                if (res.status === "sucesso") {
+                    // O banco retorna uma string JSON dentro de res.dados
+                    const dadosDB = JSON.parse(res.dados);
+                    
+                    localStorage.clear();
+                    // Repopulamos o localStorage com o backup do banco
+                    Object.keys(dadosDB).forEach(key => {
+                        localStorage.setItem(key, dadosDB[key]);
+                    });
+
+                    // Após preencher o storage, geramos a tela
+                    gerarChaveamento();
+                } else {
+                    alert("Erro ao carregar: " + res.mensagem);
+                }
+            })
+            .catch(err => console.error("Erro no fetch:", err));
+    } else {
+        // Se veio direto do cadastro (ou F5 comum), gera com o que está no local
+        gerarChaveamento();
+    }
+});
 // Gera o chaveamento inicial (semifinais)
 function gerarChaveamento(){
     const container = document.getElementById("chaves");
@@ -14,28 +43,24 @@ function gerarChaveamento(){
     const dadosSalvos = JSON.parse(localStorage.getItem("times4"));
     if(!dadosSalvos || !dadosSalvos.times) return;
 
-    // 1. Pegamos a lista de times
-    let times = dadosSalvos.times;
+    // 1. SEMPRE carregamos os resultados atuais do localStorage
+    const resultadosSemi = JSON.parse(localStorage.getItem("resultadosSemi")) || [];
 
-    // 2. VERIFICAÇÃO DE PERSISTÊNCIA: 
-    // Se já existirem resultados salvos, NÃO sorteamos de novo.
-    // Isso evita que o F5 mude os jogos que já começaram.
-    const semiSalva = JSON.parse(localStorage.getItem("resultadosSemi"));
-    
-    if (!semiSalva) {
-        // Só sorteia se for a primeiríssima vez que entra na tela
-        times.sort(() => Math.random() - 0.5);
-        // Atualizamos o storage com a ordem sorteada para o F5 manter a mesma ordem
-        localStorage.setItem("times4", JSON.stringify(dadosSalvos));
+    // 2. VERIFICAÇÃO CRÍTICA: Se já temos 2 resultados, pula direto para as finais
+    if (resultadosSemi.length >= 2) {
+        console.log("Detectado: Semifinais concluídas. Renderizando Finais...");
+        gerarFinais(resultadosSemi);
+        return; // IMPORTANTE: Encerra aqui para não desenhar as semis embaixo
     }
 
+    // 3. Caso contrário, desenha as Semifinais (fluxo normal)
+    let times = dadosSalvos.times;
     const jogo1 = [times[0], times[1]];
     const jogo2 = [times[2], times[3]];
 
     criarJogo(container, jogo1, "Semifinal");
     criarJogo(container, jogo2, "Semifinal");
 }
-
 /*Cria cada jogo no DOM*/
 function criarJogo(container, jogo, fase){
     const div = document.createElement("div");
@@ -46,9 +71,18 @@ function criarJogo(container, jogo, fase){
 
     div.innerText = `${jogo[0].time} vs ${jogo[1].time} (${fase})`;
 
-    // Se o jogo já estiver no localStorage (caso o user dê F5), já nasce verde
-    let resultadosSemi = JSON.parse(localStorage.getItem("resultadosSemi")) || [];
-    if(resultadosSemi.some(r => r.timeA === jogo[0].time && r.timeB === jogo[1].time)) {
+    // VERIFICAÇÃO DE JOGO FINALIZADO (Melhorada)
+    const resultadosSemi = JSON.parse(localStorage.getItem("resultadosSemi")) || [];
+    const finalResults = JSON.parse(localStorage.getItem("finalResults")) || {};
+
+    // Se for semifinal e estiver nos resultados...
+    const jaOcorreuSemi = resultadosSemi.some(r => r.timeA === jogo[0].time && r.timeB === jogo[1].time);
+    
+    // Se for Final ou 3º lugar e o campeão/terceiro já existir...
+    const jaOcorreuFinal = (fase === "Final" && finalResults.campeao) || 
+                           (fase === "3º lugar" && finalResults.terceiro);
+
+    if(jaOcorreuSemi || jaOcorreuFinal) {
         div.classList.add("finalizado");
     }
 
@@ -193,17 +227,17 @@ function gerarFinais(resultadosSemi){
     const container = document.getElementById("chaves");
     container.innerHTML = ""; 
 
-    // Atualiza a referência dos times para garantir que pegamos os objetos com jogadores
-    const dadosFinais = JSON.parse(localStorage.getItem("times4"));
-    const listaFinais = (dadosFinais && dadosFinais.times) ? dadosFinais.times : [];
+    // Buscamos os dados frescos do storage
+    const dadosRecuperados = JSON.parse(localStorage.getItem("times4"));
+    const listaTimes = dadosRecuperados.times;
 
     const vencedores = [];
     const perdedores = [];
 
     resultadosSemi.forEach(jogo => {
-        // Busca na lista correta
-        let objTimeA = listaFinais.find(t => t.time === jogo.timeA);
-        let objTimeB = listaFinais.find(t => t.time === jogo.timeB);
+        // Busca o objeto completo do time para ter acesso aos jogadores no modal
+        let objTimeA = listaTimes.find(t => t.time === jogo.timeA);
+        let objTimeB = listaTimes.find(t => t.time === jogo.timeB);
 
         if(jogo.golsA > jogo.golsB){
             vencedores.push(objTimeA);
@@ -214,8 +248,11 @@ function gerarFinais(resultadosSemi){
         }
     });
 
-    criarJogo(container, [vencedores[0], vencedores[1]], "Final");
-    criarJogo(container, [perdedores[0], perdedores[1]], "3º lugar");
+    // Cria os cards de Final e 3º lugar
+    if(vencedores.length === 2 && perdedores.length === 2) {
+        criarJogo(container, [vencedores[0], vencedores[1]], "Final");
+        criarJogo(container, [perdedores[0], perdedores[1]], "3º lugar");
+    }
 }
 
 // Finaliza torneio e vai para ranking
@@ -227,11 +264,6 @@ function finalizarTorneio(){
     }
     window.location.href = "../php/ranking.php";  
 }
-
-// Inicia chaveamento ao carregar
-document.addEventListener("DOMContentLoaded", () => {
-    gerarChaveamento();
-});
 
 /*Implementação do modo cartão*/
 function alternarModoCartao() {

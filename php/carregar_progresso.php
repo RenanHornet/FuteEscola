@@ -3,30 +3,32 @@ header('Content-Type: application/json');
 include("conexao.php");
 session_start();
 
-// Verifica se o usuário está logado
 if (!isset($_SESSION['usuario_id'])) {
     echo json_encode(["status" => "erro", "mensagem" => "Sessão expirada."]);
     exit;
 }
 
+// Agora recebemos o ID do save específico via GET
+if (!isset($_GET['id_save'])) {
+    echo json_encode(["status" => "erro", "mensagem" => "ID do campeonato não fornecido."]);
+    exit;
+}
+
+$id_save = $conn->real_escape_string($_GET['id_save']);
 $id_usuario = $_SESSION['usuario_id'];
 
-// Busca o save único do usuário
-$sql = "SELECT dados_json FROM saves_campeonatos WHERE id_usuario = '$id_usuario' LIMIT 1";
+// Busca o save específico garantindo que pertence ao usuário logado
+$sql = "SELECT dados_json FROM saves_campeonatos WHERE id_save = '$id_save' AND id_usuario = '$id_usuario'";
 $resultado = $conn->query($sql);
 
 if ($resultado->num_rows > 0) {
     $linha = $resultado->fetch_assoc();
-    // Retornamos os dados que estão em formato de string JSON
     echo json_encode([
         "status" => "sucesso",
-        "dados" => $linha['dados_json']
+        "dados" => $linha['dados_json'] // Retorna o JSON completo do backup
     ]);
 } else {
-    echo json_encode([
-        "status" => "erro",
-        "mensagem" => "Nenhum campeonato salvo encontrado."
-    ]);
+    echo json_encode(["status" => "erro", "mensagem" => "Campeonato não encontrado."]);
 }
 
 $conn->close();

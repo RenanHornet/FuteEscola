@@ -75,12 +75,12 @@ function salvarTimes4(){
     // 6. Salva no navegador (localStorage)
     localStorage.setItem("times4", JSON.stringify(dadosMataMata));
 
-    // 7. Chama a função do save4.js para persistir no Banco de Dados
-    salvarCampeonato4();
-
-    // 8. Redireciona com um pequeno delay para garantir o envio do banco
-    setTimeout(() => {
-        window.location.href = "../php/chaveamento.php";
-    }, 500);
+    // 7. Chama a função do save4.js e aguarda a conclusão
+    salvarCampeonato4().then((data) => {
+        if (data && data.status === "sucesso") {
+            // 8. Redireciona apenas após o sucesso do banco
+            // Como agora você tem múltiplos torneios, o ideal é ir para a listagem
+            window.location.href = "meus_campeonatos.php";
+        }
+    });
 }
-

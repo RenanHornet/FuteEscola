@@ -14,6 +14,7 @@
         <nav class="navbar">
             <a href="home.php">Home</a>
             <a href="campeonato.php">Novo Campeonato</a>
+            <a href="meus_campeonatos.php">Campeonatos Salvos</a>
             <a href="chaveamento.php">Chaveamento Simples</a>
             <a href="semifinal6.php">Semifinal Grupos</a>
             <a href="ranking.php">Ranking</a>
@@ -37,11 +38,7 @@
             <p class="frase">
                 <strong>Uma proposta mais moderna para seu interclasse!</strong>
             </p>
-            <div style="margin-top: 30px; text-align: center;">
-                <button onclick="carregarCampeonatoDoBanco()" class="btn">
-                    ⚽ Continuar Campeonato Salvo
-                </button>
-            </div>
+           
         </article>
     </main>
 

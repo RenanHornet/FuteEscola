@@ -1,6 +1,7 @@
 CREATE DATABASE FuteEscola;
 USE FuteEscola;
 
+-- Tabela de cadastros
 CREATE TABLE Cadastros (
 ID_Cadastro INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 Usuario VARCHAR(280) NOT NULL UNIQUE,
@@ -11,34 +12,32 @@ Data_Cadastro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 
 );
 
--- -----------------------------------------------------
+
 -- Tabela para o Sistema de Save Game (MVP)
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS saves_campeonatos (
+
+CREATE TABLE saves_campeonatos (
     id_save INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT NOT NULL,
     nome_torneio VARCHAR(150) NOT NULL,
     dados_json LONGTEXT NOT NULL,
     data_save DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
-    -- UNIQUE para garantir que cada usuário tenha apenas um "slot" de save ativo por vez
-    -- Se ele salvar um novo, o PHP fará o UPDATE no mesmo registro.
-    UNIQUE KEY (id_usuario), 
+    -- Esta chave garante que o mesmo professor possa ter vários torneios,
+    -- mas impede dois torneios com o exato mesmo nome para o mesmo ID de usuário.
+    UNIQUE KEY uq_usuario_torneio (id_usuario, nome_torneio),
     
-    -- Relaciona o save ao usuário logado
+    -- Relaciona o save ao usuário logado na sua tabela de Cadastros
     CONSTRAINT fk_save_usuario 
     FOREIGN KEY (id_usuario) 
     REFERENCES Cadastros (ID_Cadastro) 
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
-
+-- demais tabelas para escalabilidade do projeto
 CREATE TABLE campeonatos (
     id_campeonato INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    id_escola INT,
-    FOREIGN KEY (id_escola) REFERENCES escolas(id_escola)
+    nome VARCHAR(250) NOT NULL
+   
 );
 
 
