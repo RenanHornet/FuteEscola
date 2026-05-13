@@ -146,6 +146,12 @@ function registrarGol(nomeJogador, lado) {
 
 /*Gera as finais*/
 function finalizarPartida() {
+    if (placarA === placarB) {
+        alert("A partida está empatada! \n"+
+            "De acordo com o regulamento, realize as penaldiades alternadas."
+        );
+        return;
+    }
     const resultado = {
         timeA: jogoAtualModal.jogo[0].time,
         timeB: jogoAtualModal.jogo[1].time,

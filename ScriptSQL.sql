@@ -33,6 +33,8 @@ CREATE TABLE saves_campeonatos (
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+select * from saves_campeonatos;
+
 -- demais tabelas para escalabilidade do projeto
 CREATE TABLE campeonatos (
     id_campeonato INT AUTO_INCREMENT PRIMARY KEY,
