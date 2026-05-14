@@ -16,6 +16,7 @@ function salvarCampeonato4() {
 
     const formData = new FormData();
     formData.append('nome_torneio', nomeTorneio);
+    formData.append('tipo_torneio', 4);
     formData.append('dados_json', JSON.stringify(backup));
 
     // O "return" aqui é fundamental para o próximo passo
@@ -24,16 +25,28 @@ function salvarCampeonato4() {
         body: formData
     })
     .then(res => res.json())
+    // ... dentro do fetch no save4.js ...
     .then(data => {
-        if(data.status === "sucesso") {
-            console.log("Progresso do Mata-mata salvo!");
-            return data; // Repassa o sucesso
+        if (data.status === "sucesso") {
+            // Este alerta aparecerá sempre que a função for chamada
+            alert("✅ Progresso salvo com sucesso!"); 
+            return data; 
         } else {
+            alert("❌ Erro ao salvar: " + data.mensagem);
             throw new Error(data.mensagem);
         }
     })
     .catch(err => {
-        console.error("Erro ao salvar:", err);
-        alert("Erro ao salvar no servidor: " + err);
+        console.error("Erro:", err);
+        alert("⚠️ Falha na conexão com o servidor.");
+    });
+}
+
+function executarSalvamentoManual() {
+    salvarCampeonato4().then(data => {
+        if (data && data.status === "sucesso") {
+            // O alert aqui confirma para o usuário que o clique funcionou
+            alert("Torneio '" + (JSON.parse(localStorage.getItem("times4")).nome) + "' atualizado no banco de dados!");
+        }
     });
 }

@@ -7,14 +7,26 @@ let placarA = 0;
 let placarB = 0;    
 
 document.addEventListener("DOMContentLoaded", () => {
-    const dados = JSON.parse(localStorage.getItem("semifinal6_dados"));
-    
-    if (!dados) {
-        alert("Dados da seminfinal não encontrados!");
-        window.location.href = "../php/chaveamento6.php";
-        return;
+    const urlParams = new URLSearchParams(window.location.search);
+    const idSave = urlParams.get('id');
+
+    if (idSave) {
+        fetch(`../php/carregar_progresso.php?id_save=${idSave}`)
+            .then(res => res.json())
+            .then(res => {
+                if (res.status === "sucesso") {
+                    const dadosDB = JSON.parse(res.dados);
+                    // Restaura o backup do banco
+                    Object.keys(dadosDB).forEach(key => localStorage.setItem(key, dadosDB[key]));
+                    
+                    const dadosSemis = JSON.parse(localStorage.getItem("semifinal6_dados"));
+                    renderizarSemifinais(dadosSemis);
+                }
+            });
+    } else {
+        const dados = JSON.parse(localStorage.getItem("semifinal6_dados"));
+        renderizarSemifinais(dados);
     }
-    renderizarSemifinais(dados);
 });
 
 function renderizarSemifinais(dados) {
@@ -186,6 +198,13 @@ function finalizarPartida() {
             }
         }
         localStorage.setItem("finalResults", JSON.stringify(finalResults));
+
+        if (typeof salvarCampeonato6 === "function") {
+            salvarCampeonato6();
+            console.log("Campeonato salvo com sucesso!");
+        } 
+
+        fecharModal();
     }
 
     //Trava visual 

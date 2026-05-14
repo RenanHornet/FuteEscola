@@ -40,9 +40,36 @@ $resultado = $conn->query($sql);
             <?php if ($resultado->num_rows > 0): ?>
                 <?php while($row = $resultado->fetch_assoc()): ?>
                     <div class="card-torneio">
-                        <h3><?php echo $row['nome_torneio']; ?></h3>
+                        <h3><?php echo htmlspecialchars($row['nome_torneio']); ?></h3>
                         <p>Última atualização: <?php echo date('d/m/Y H:i', strtotime($row['data_save'])); ?></p>
-                        <a href="chaveamento.php?id=<?php echo $row['id_save']; ?>" class="btn-abrir">Gerir Torneio</a>
+                        
+                        <?php 
+                            // 1. Pegamos o conteúdo bruto do banco
+                            $conteudo = $row['dados_json'] ?? '';
+
+                            // 2. Identificação ultra-sensível
+                            // Verificamos se a chave de 6 times existe em qualquer lugar da string
+                            // Usamos strpos para compatibilidade total
+                            if (strpos($conteudo, 'torneioAtual') !== false) {
+                                $linkDestino = "chaveamento6.php";
+                                $tipoLabel = "6 Times (Grupos)";
+                                $corBadge = "#28a745"; // Verde para 6 times
+                            } else {
+                                $linkDestino = "chaveamento.php";
+                                $tipoLabel = "4 Times (Mata-mata)";
+                                $corBadge = "#007bff"; // Azul para 4 times
+                            }
+                        ?>
+
+                        <div style="margin-bottom: 15px;">
+                            <small style="background: <?php echo $corBadge; ?>; color: white; padding: 3px 10px; border-radius: 5px; font-weight: bold;">
+                                <?php echo $tipoLabel; ?>
+                            </small>
+                        </div>
+                        
+                        <a href="<?php echo $linkDestino; ?>?id=<?php echo $row['id_save']; ?>" class="btn-abrir">
+                            Gerir Torneio
+                        </a>
                         <hr>
                     </div>
                 <?php endwhile; ?>

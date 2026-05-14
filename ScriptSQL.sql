@@ -14,26 +14,19 @@ Data_Cadastro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 
 
 -- Tabela para o Sistema de Save Game (MVP)
-
 CREATE TABLE saves_campeonatos (
     id_save INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT NOT NULL,
     nome_torneio VARCHAR(150) NOT NULL,
+    tipo_torneio INT NOT NULL, -- 4 para Mata-mata, 6 para Grupos
     dados_json LONGTEXT NOT NULL,
     data_save DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
-    -- Esta chave garante que o mesmo professor possa ter vários torneios,
-    -- mas impede dois torneios com o exato mesmo nome para o mesmo ID de usuário.
     UNIQUE KEY uq_usuario_torneio (id_usuario, nome_torneio),
-    
-    -- Relaciona o save ao usuário logado na sua tabela de Cadastros
-    CONSTRAINT fk_save_usuario 
-    FOREIGN KEY (id_usuario) 
-    REFERENCES Cadastros (ID_Cadastro) 
-    ON DELETE CASCADE
+    CONSTRAINT fk_save_usuario FOREIGN KEY (id_usuario) 
+        REFERENCES Cadastros (ID_Cadastro) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-select * from saves_campeonatos;
 
 -- demais tabelas para escalabilidade do projeto
 CREATE TABLE campeonatos (

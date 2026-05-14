@@ -4,8 +4,9 @@ function limparDadosAntigos() {
     localStorage.removeItem("artilharia");
     localStorage.removeItem("resultadosSemi");
     localStorage.removeItem("times4");
+    localStorage.removeItem("torneioAtual"); // Chave principal do torneio de 6
+    localStorage.removeItem("semifinal6_dados"); // Chave das semis de 6
 }
-
 
 
 let listaDeTimes = [];
@@ -50,37 +51,63 @@ function adicionarTime() {
 
 /* Função de finalizar alterada para capturar o último time automaticamente */
 function finalizarCadastro() {
-
     if (listaDeTimes.length === 5) {
         adicionarTime();
     }
 
     if (listaDeTimes.length < 6) {
-        alert("Erro: Você precisa preencher os dados do 6º time antes de finalizar!");
+        alert("Erro: Você precisa cadastrar os 6 times antes de gerar o campeonato!");
+        return;
+    }
+
+    const nomeCampInput = document.getElementById("nome-campeonato");
+    const nomeCampeonato = nomeCampInput ? nomeCampInput.value.trim() : "";
+
+    if (nomeCampeonato === "") {
+        alert("Por favor, dê um nome ao campeonato!");
+        nomeCampInput.focus();
         return;
     }
 
     limparDadosAntigos(); 
-    // 1. Embaralhar
-    listaDeTimes.sort(() => Math.random() - 0.5);
 
-    // 2. Dividir Grupos
+    listaDeTimes.sort(() => Math.random() - 0.5);
     const grupoA = listaDeTimes.slice(0, 3);
     const grupoB = listaDeTimes.slice(3, 6);
 
-    // 3. Estruturar os dados
     const dadosTorneio = {
-        formato: "grupos",
+        nome: nomeCampeonato,
+        formato: "grupos", // Isso ajuda a identificar no JSON
         grupoA: grupoA,
         grupoB: grupoB,
         partidas: gerarConfrontosIniciais(grupoA, grupoB)
     };
 
+    // 1. Salva no localStorage com a chave de 6 times
     localStorage.setItem("torneioAtual", JSON.stringify(dadosTorneio));
-    alert("Campeonato Gerado! Redirecionando...");
-    window.location.href = "../php/chaveamento6.php";
+
+    // 2. ENVIO PARA O BANCO
+    salvarCampeonato6().then((resposta) => {
+        if (resposta && resposta.status === "sucesso") {
+            alert("Campeonato '" + nomeCampeonato + "' criado com sucesso!");
+            
+            // MELHORIA: Em vez de ir para a lista geral, 
+            // vamos direto para o jogo enviando o ID que o banco acabou de gerar
+            if (resposta.id_save) {
+                window.location.href = "chaveamento6.php?id=" + resposta.id_save;
+            } else {
+                window.location.href = "meus_campeonatos.php";
+            }
+        } else {
+            alert("Erro ao salvar: " + (resposta ? resposta.mensagem : "Erro desconhecido"));
+        }
+    }).catch(err => {
+        console.error("Erro no processo de salvamento:", err);
+        alert("Erro de conexão ao salvar no banco de dados.");
+    });
 }
 
+/*gera os grupos A e B */ 
 function gerarConfrontosIniciais(ga, gb) {
     return {
         "A": [

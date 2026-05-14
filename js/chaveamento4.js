@@ -7,31 +7,29 @@ let cartoesPartida = {};
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     const idSave = urlParams.get('id');
+    
+    const dados6 = JSON.parse(localStorage.getItem("torneioAtual"));
+    const dados4 = JSON.parse(localStorage.getItem("times4"));
 
+    // 1. Verificação de Tipo (Redirecionamento)
+    if (dados6 && !dados4 && !idSave) {
+        window.location.href = "chaveamento6.php?id=" + urlParams.get('id');
+        return; 
+    }
+
+    // 2. Carregamento de Dados
     if (idSave) {
-        // Se abriu via "Meus Campeonatos", força o carregamento do banco
         fetch(`../php/carregar_progresso.php?id_save=${idSave}`)
             .then(res => res.json())
             .then(res => {
                 if (res.status === "sucesso") {
-                    // O banco retorna uma string JSON dentro de res.dados
                     const dadosDB = JSON.parse(res.dados);
-                    
-                    localStorage.clear();
-                    // Repopulamos o localStorage com o backup do banco
-                    Object.keys(dadosDB).forEach(key => {
-                        localStorage.setItem(key, dadosDB[key]);
-                    });
-
-                    // Após preencher o storage, geramos a tela
+                    // Limpeza seletiva e repopulação
+                    Object.keys(dadosDB).forEach(key => localStorage.setItem(key, dadosDB[key]));
                     gerarChaveamento();
-                } else {
-                    alert("Erro ao carregar: " + res.mensagem);
                 }
-            })
-            .catch(err => console.error("Erro no fetch:", err));
+            });
     } else {
-        // Se veio direto do cadastro (ou F5 comum), gera com o que está no local
         gerarChaveamento();
     }
 });
@@ -216,10 +214,16 @@ function finalizarPartida(){
             } else {
                 finalResults.terceiro = resultado.timeB;
                 finalResults.quarto = resultado.timeA;
+
             }
         }
         localStorage.setItem("finalResults", JSON.stringify(finalResults));
         localStorage.setItem("finaisGeradas", "true");
+        // NOVO: Salvamento automático após cada partida
+        if (typeof salvarCampeonato4 === "function") {
+            salvarCampeonato4(); 
+            console.log("Progresso salvo automaticamente após a partida.");
+        }
     }
 
     const jogoID = `${resultado.timeA}-${resultado.timeB}`;

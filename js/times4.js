@@ -78,9 +78,12 @@ function salvarTimes4(){
     // 7. Chama a função do save4.js e aguarda a conclusão
     salvarCampeonato4().then((data) => {
         if (data && data.status === "sucesso") {
-            // 8. Redireciona apenas após o sucesso do banco
-            // Como agora você tem múltiplos torneios, o ideal é ir para a listagem
-            window.location.href = "meus_campeonatos.php";
+            if (data.id_save) {
+                window.location.href = `chaveamento.php?id=${data.id_save}`
+            } else {
+                window.location.href = "meus_campeonatos.php";    
+            }
+            
         }
     });
 }

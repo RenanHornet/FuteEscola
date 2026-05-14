@@ -2,13 +2,46 @@ let modoCartaoAtivo = false;
 let cartoesPartida = {}; 
 /*Inicialização*/
 document.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const idSave = urlParams.get('id');
+
+    if (idSave) {
+        // Busca os dados específicos no banco de dados
+        fetch(`../php/carregar_progresso.php?id_save=${idSave}`)
+            .then(res => res.json())
+            .then(res => {
+                if (res.status === "sucesso") {
+                    const dadosDB = JSON.parse(res.dados);
+                    
+                    // Limpa o lixo do navegador e injeta o backup do banco
+                    localStorage.clear();
+                    Object.keys(dadosDB).forEach(key => {
+                        localStorage.setItem(key, dadosDB[key]);
+                    });
+
+                    // Agora que o localStorage está pronto, carrega a interface
+                    carregarInterface6();
+                } else {
+                    alert("Erro ao carregar torneio: " + res.mensagem);
+                }
+            })
+            .catch(err => console.error("Erro no fetch:", err));
+    } else {
+        // Caso não venha ID (fluxo direto do cadastro), tenta carregar do local
+        carregarInterface6();
+    }
+});
+
+// Função auxiliar para evitar repetição de código
+function carregarInterface6() {
     const dados = JSON.parse(localStorage.getItem("torneioAtual"));
     if (dados) {
         renderizarJogos(dados.partidas);
         atualizarClassificacao();
+    } else {
+        alert("Nenhum dado encontrado para este torneio.");
     }
-});
-
+}
 /*desenha a interface*/ 
 function renderizarJogos(partidas) {
     const container = document.getElementById("lista-jogos");
@@ -148,6 +181,19 @@ function finalizarPartida() {
     fecharModal();
     renderizarJogos(dados.partidas);
     atualizarClassificacao();
+
+    //Salva o estado atualizado no localStorage
+    localStorage.setItem("torneioAtual", JSON.stringify(dados));
+
+    //Persiste no banco de dados automaticamente
+    if (typeof salvarCampeonato6 === "function") {
+        salvarCampeonato6();
+        console.log("Progresso salvo automaticamente no banco.");
+    }
+
+    fecharModal();
+    renderizarJogos(dados.partidas);
+    atualizarClassificacao();
 }
 
 function fecharModal() {
@@ -201,8 +247,11 @@ function concluirFaseDeGrupos() {
     };
 
     localStorage.setItem("semifinal6_dados", JSON.stringify(semifinalistas));
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const idSave = urlParams.get('id');
     alert("Fase de grupos concluída! Partiu Semifinais.");
-    window.location.href = "../php/semifinal6.php";
+    window.location.href = `../php/semifinal6.php?id=${idSave}`;
 }
 
 /*Função de cartões amarelos*/ 
