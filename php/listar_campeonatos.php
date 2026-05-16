@@ -10,8 +10,8 @@ if (!isset($_SESSION['usuario_id'])) {
 
 $id_usuario = $_SESSION['usuario_id'];
 
-// Seleciona todos os torneios do professor logado
-$sql = "SELECT id_save, nome_torneio, data_save FROM saves_campeonatos WHERE id_usuario = '$id_usuario' ORDER BY data_save DESC";
+// CORREÇÃO: Agora selecionamos também a coluna tipo_torneio
+$sql = "SELECT id_save, nome_torneio, tipo_torneio, data_save FROM saves_campeonatos WHERE id_usuario = '$id_usuario' ORDER BY data_save DESC";
 $resultado = $conn->query($sql);
 
 $torneios = [];

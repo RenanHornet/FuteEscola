@@ -8,13 +8,14 @@ if (!isset($_SESSION['usuario_id'])) {
 }
 
 $id_usuario = $_SESSION['usuario_id'];
-// Procura todos os torneios deste professor
-$sql = "SELECT id_save, nome_torneio, data_save FROM saves_campeonatos WHERE id_usuario = '$id_usuario' ORDER BY data_save DESC";
+
+// CORREÇÃO 1: Agora selecionamos a coluna tipo_torneio explicitamente
+$sql = "SELECT id_save, nome_torneio, tipo_torneio, data_save FROM saves_campeonatos WHERE id_usuario = '$id_usuario' ORDER BY data_save DESC";
 $resultado = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang=\"pt-BR\">
 <head>
     <meta charset="UTF-8">
     <title>Meus Torneios</title>
@@ -37,20 +38,15 @@ $resultado = $conn->query($sql);
         </header>
 
         <section class="container-lista">
-            <?php if ($resultado->num_rows > 0): ?>
-                <?php while($row = $resultado->fetch_assoc()): ?>
-                    <div class="card-torneio">
-                        <h3><?php echo htmlspecialchars($row['nome_torneio']); ?></h3>
-                        <p>Última atualização: <?php echo date('d/m/Y H:i', strtotime($row['data_save'])); ?></p>
-                        
-                        <?php 
-                            // 1. Pegamos o conteúdo bruto do banco
-                            $conteudo = $row['dados_json'] ?? '';
+            <?php if ($resultado && $resultado->num_rows > 0): ?>
+                <?php while ($row = $resultado->fetch_assoc()): ?>
+                    <div class="card-campeonato" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 8px;">
+                        <h2><?php echo htmlspecialchars($row['nome_torneio']); ?></h2>
+                        <p>Data de Criação: <?php echo date('d/m/Y H:i', strtotime($row['data_save'])); ?></p>
 
-                            // 2. Identificação ultra-sensível
-                            // Verificamos se a chave de 6 times existe em qualquer lugar da string
-                            // Usamos strpos para compatibilidade total
-                            if (strpos($conteudo, 'torneioAtual') !== false) {
+                        <?php 
+                            // CORREÇÃO 2: Lógica direta e limpa baseada no tipo_torneio real do banco de dados
+                            if ((int)$row['tipo_torneio'] === 6) {
                                 $linkDestino = "chaveamento6.php";
                                 $tipoLabel = "6 Times (Grupos)";
                                 $corBadge = "#28a745"; // Verde para 6 times

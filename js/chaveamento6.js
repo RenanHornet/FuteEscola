@@ -6,20 +6,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const idSave = urlParams.get('id');
 
     if (idSave) {
-        // Busca os dados específicos no banco de dados
         fetch(`../php/carregar_progresso.php?id_save=${idSave}`)
             .then(res => res.json())
             .then(res => {
                 if (res.status === "sucesso") {
-                    const dadosDB = JSON.parse(res.dados);
+                    // Trata se o banco devolver string ou objeto puro
+                    const dadosDB = typeof res.dados === "string" ? JSON.parse(res.dados) : res.dados;
                     
-                    // Limpa o lixo do navegador e injeta o backup do banco
-                    localStorage.clear();
+                    // Limpa dados antigos locais para receber os novos do banco
+                    localStorage.removeItem("torneioAtual");
+                    localStorage.removeItem("artilharia");
+                    localStorage.removeItem("semifinal6_dados");
+
+                    // Injeta cada chave de volta no localStorage de forma limpa
                     Object.keys(dadosDB).forEach(key => {
                         localStorage.setItem(key, dadosDB[key]);
                     });
 
-                    // Agora que o localStorage está pronto, carrega a interface
+                    // Agora que os dados estão no localStorage, desenha a tela
                     carregarInterface6();
                 } else {
                     alert("Erro ao carregar torneio: " + res.mensagem);
@@ -27,11 +31,9 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .catch(err => console.error("Erro no fetch:", err));
     } else {
-        // Caso não venha ID (fluxo direto do cadastro), tenta carregar do local
         carregarInterface6();
     }
 });
-
 // Função auxiliar para evitar repetição de código
 function carregarInterface6() {
     const dados = JSON.parse(localStorage.getItem("torneioAtual"));
