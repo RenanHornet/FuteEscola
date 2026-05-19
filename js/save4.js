@@ -14,22 +14,34 @@ function salvarCampeonato4() {
         backup[key] = localStorage.getItem(key);
     }
 
+    // CORREÇÃO CRÍTICA: Captura o ID diretamente da URL do navegador (?id=17)
+    const urlParams = new URLSearchParams(window.location.search);
+    const idSave = urlParams.get('id');
+
     const formData = new FormData();
     formData.append('nome_torneio', nomeTorneio);
     formData.append('tipo_torneio', 4);
     formData.append('dados_json', JSON.stringify(backup));
 
-    // O "return" aqui é fundamental para o próximo passo
+    // CORREÇÃO CRÍTICA: Se o ID existir na URL, envia ele para o PHP saber que deve atualizar (UPDATE)
+    if (idSave) {
+        formData.append('id_save', idSave);
+    }
+
     return fetch("../php/salvar_progresso.php", {
         method: "POST",
         body: formData
     })
     .then(res => res.json())
-    // ... dentro do fetch no save4.js ...
     .then(data => {
         if (data.status === "sucesso") {
-            // Este alerta aparecerá sempre que a função for chamada
-            alert("✅ Progresso salvo com sucesso!"); 
+            console.log("✅ Progresso salvo com sucesso!"); 
+            
+            // Se o campeonato acabou de ser criado e não tinha ID na URL, atualiza a barra de endereço
+            if (!urlParams.has('id') && data.id_save) {
+                window.location.search = `?id=${data.id_save}`;
+            }
+            
             return data; 
         } else {
             alert("❌ Erro ao salvar: " + data.mensagem);

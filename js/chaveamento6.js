@@ -10,30 +10,44 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(res => res.json())
             .then(res => {
                 if (res.status === "sucesso") {
-                    // Trata se o banco devolver string ou objeto puro
-                    const dadosDB = typeof res.dados === "string" ? JSON.parse(res.dados) : res.dados;
+                    // 1. Trata se o banco devolveu string ou objeto puro
+                    let dadosDB = res.dados;
+                    if (typeof dadosDB === "string") {
+                        dadosDB = JSON.parse(dadosDB);
+                    }
                     
-                    // Limpa dados antigos locais para receber os novos do banco
+                    // 2. Limpa dados antigos locais para evitar conflitos
                     localStorage.removeItem("torneioAtual");
                     localStorage.removeItem("artilharia");
                     localStorage.removeItem("semifinal6_dados");
 
-                    // Injeta cada chave de volta no localStorage de forma limpa
+                    // 3. Injeta cada chave de volta no localStorage tratando sub-JSONs
                     Object.keys(dadosDB).forEach(key => {
-                        localStorage.setItem(key, dadosDB[key]);
+                        let valor = dadosDB[key];
+                        // Se o valor veio como string contendo um JSON (comum no banco), mantém como string pura pro localStorage
+                        if (typeof valor === "object" && valor !== null) {
+                            localStorage.setItem(key, JSON.stringify(valor));
+                        } else {
+                            localStorage.setItem(key, valor);
+                        }
                     });
 
-                    // Agora que os dados estão no localStorage, desenha a tela
+                    // 4. Agora que os dados estão perfeitamente restaurados, desenha a tela
                     carregarInterface6();
                 } else {
                     alert("Erro ao carregar torneio: " + res.mensagem);
+                    carregarInterface6();
                 }
             })
-            .catch(err => console.error("Erro no fetch:", err));
+            .catch(err => {
+                console.error("Erro no fetch de carregamento:", err);
+                carregarInterface6();
+            });
     } else {
         carregarInterface6();
     }
 });
+
 // Função auxiliar para evitar repetição de código
 function carregarInterface6() {
     const dados = JSON.parse(localStorage.getItem("torneioAtual"));

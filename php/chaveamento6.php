@@ -138,6 +138,7 @@
         </div>
     </section>    
 
+    <script src="../js/save6.js"></script>
     <script src="../js/chaveamento6.js"></script>
 </body>
 </html>

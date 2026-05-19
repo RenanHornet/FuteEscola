@@ -1,7 +1,7 @@
 let modoCartaoAtivo = false;
 let cartoesPartida = {};
 
-/*puxa as informações da semifinal*/
+/* Puxa as informações da semifinal */
 let jogoAtualModal = null;
 let placarA = 0;
 let placarB = 0;    
@@ -15,19 +15,36 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(res => res.json())
             .then(res => {
                 if (res.status === "sucesso") {
-                    const dadosDB = JSON.parse(res.dados);
-                    // Restaura o backup do banco
+                    const dadosDB = typeof res.dados === "string" ? JSON.parse(res.dados) : res.dados;
+                    // Restaura o backup do banco de forma limpa no localStorage
                     Object.keys(dadosDB).forEach(key => localStorage.setItem(key, dadosDB[key]));
                     
-                    const dadosSemis = JSON.parse(localStorage.getItem("semifinal6_dados"));
-                    renderizarSemifinais(dadosSemis);
+                    verificarEFluxoInterface();
                 }
-            });
+            })
+            .catch(err => console.error("Erro ao carregar do banco:", err));
     } else {
-        const dados = JSON.parse(localStorage.getItem("semifinal6_dados"));
-        renderizarSemifinais(dados);
+        verificarEFluxoInterface();
     }
 });
+
+// CORREÇÃO CRÍTICA: Decide inteligentemente se exibe as semifinais ou se pula direto para as Finais salvas
+function verificarEFluxoInterface() {
+    const resultadosSemi = JSON.parse(localStorage.getItem("resultadosSemi")) || [];
+    const dadosSemis = JSON.parse(localStorage.getItem("semifinal6_dados"));
+
+    if (!dadosSemis) {
+        alert("Dados das semifinais não encontrados!");
+        return;
+    }
+
+    // Se já existirem as 2 semifinais jogadas e salvas, gera a tela direto com as Finais
+    if (resultadosSemi.length === 2) {
+        gerarFinais(resultadosSemi);
+    } else {
+        renderizarSemifinais(dadosSemis);
+    }
+}
 
 function renderizarSemifinais(dados) {
     const container = document.getElementById("chaves");
@@ -39,22 +56,19 @@ function renderizarSemifinais(dados) {
     ];
 
     jogos.forEach((j) => {
-        criarJogo(container, j.times, j.fase); // Usando a função criarJogo para padronizar
+        criarJogo(container, j.times, j.fase);
     });
 }
 
-/* --- AJUSTE NA FUNÇÃO CRIAR JOGO --- */
 function criarJogo(container, jogo, fase) {
     const div = document.createElement("div");
     div.className = "match-box";
     
-    // RG único para o card (Fase + Times)
     const jogoID = `${fase}-${jogo[0].time}-${jogo[1].time}`;
     div.setAttribute("data-id", jogoID);
     
     div.innerHTML = `<strong>${fase}</strong><br>${jogo[0].time} vs ${jogo[1].time}`;
 
-    // VERIFICAÇÃO DE PERSISTÊNCIA (Ao carregar a página)
     const resultadosSemi = JSON.parse(localStorage.getItem("resultadosSemi")) || [];
     const finalResults = JSON.parse(localStorage.getItem("finalResults")) || {};
 
@@ -77,9 +91,8 @@ function criarJogo(container, jogo, fase) {
     container.appendChild(div);
 }
 
-/*funções do modal de partida(mesmo que o do mata-mata)*/
 function abrirModal(jogo, fase){
-    jogoAtualModal = { jogo, fase };
+    jogoAtualModal = { juego: jogo, fase };
 
     placarA = 0;
     placarB = 0;
@@ -95,25 +108,22 @@ function abrirModal(jogo, fase){
 
 function fecharModal(){
     document.getElementById("modalPartida").style.display = "none";
-    placarA = 0; // Reset fundamental
-    placarB = 0; // Reset fundamental
+    placarA = 0; 
+    placarB = 0; 
     modoCartaoAtivo = false;
     cartoesPartida = {};
 }
 
 function carregarJogadoresModal(timeA, timeB) {
     const dadosGeral = JSON.parse(localStorage.getItem("torneioAtual"));
-    // Une os grupos para não dar erro de busca
     const todosOsTimes = [...dadosGeral.grupoA, ...dadosGeral.grupoB];
 
     const objTimeA = todosOsTimes.find(t => t.time === timeA) || { jogadores: [] };
     const objTimeB = todosOsTimes.find(t => t.time === timeB) || { jogadores: [] };
 
-    // Aqui ela distribui as tarefas para a função de cima
     criarBotoesGols(objTimeA.jogadores, "jogadoresA", "mScoreA", "jogador-btn");
     criarBotoesGols(objTimeB.jogadores, "jogadoresB", "mScoreB", "jogador-btn2");
 }
-
 
 function criarBotoesGols(jogadores, containerId, placarId, classeCor) {
     const container = document.getElementById(containerId);
@@ -130,7 +140,6 @@ function criarBotoesGols(jogadores, containerId, placarId, classeCor) {
                 aplicarCartao(nome, timeLetra, btn);
             } 
             else {
-                // Descobre o lado para atualizar a variável correta
                 const lado = (containerId === "jogadoresA") ? "A" : "B";
                 registrarGol(nome, lado); 
             }
@@ -140,7 +149,6 @@ function criarBotoesGols(jogadores, containerId, placarId, classeCor) {
 }
 
 function registrarGol(nomeJogador, lado) {
-    // Atualiza as variáveis globais que a função finalizarPartida utiliza
     if (lado === "A") {
         placarA++;
         document.getElementById("mScoreA").textContent = placarA;
@@ -149,24 +157,21 @@ function registrarGol(nomeJogador, lado) {
         document.getElementById("mScoreB").textContent = placarB;
     }
 
-    // Salva na artilharia
     let artilharia = JSON.parse(localStorage.getItem("artilharia")) || {};
     if (!artilharia[nomeJogador]) artilharia[nomeJogador] = 0;
     artilharia[nomeJogador]++;
     localStorage.setItem("artilharia", JSON.stringify(artilharia));
 }
 
-/*Gera as finais*/
 function finalizarPartida() {
     if (placarA === placarB) {
-        alert("A partida está empatada! \n"+
-            "De acordo com o regulamento, realize as penaldiades alternadas."
-        );
+        alert("A partida está empatada! \nDe acordo com o regulamento, realize as penalidades alternadas.");
         return;
     }
+
     const resultado = {
-        timeA: jogoAtualModal.jogo[0].time,
-        timeB: jogoAtualModal.jogo[1].time,
+        timeA: jogoAtualModal.juego[0].time,
+        timeB: jogoAtualModal.juego[1].time,
         golsA: placarA,
         golsB: placarB,
         fase: jogoAtualModal.fase
@@ -178,7 +183,17 @@ function finalizarPartida() {
     if (jogoAtualModal.fase.includes("Semifinal")) {
         resultadosSemi.push(resultado);
         localStorage.setItem("resultadosSemi", JSON.stringify(resultadosSemi));
-        if (resultadosSemi.length === 2) gerarFinais(resultadosSemi);
+        
+        // CORREÇÃO CRÍTICA: Salva no banco de dados imediatamente ao fim da semifinal
+        if (typeof salvarCampeonato6 === "function") {
+            salvarCampeonato6().then(() => {
+                if (resultadosSemi.length === 2) {
+                    gerarFinais(resultadosSemi);
+                }
+            });
+        } else if (resultadosSemi.length === 2) {
+            gerarFinais(resultadosSemi);
+        }
     } else {
         if (jogoAtualModal.fase === "Final") {
             if (resultado.golsA > resultado.golsB) {
@@ -201,14 +216,11 @@ function finalizarPartida() {
 
         if (typeof salvarCampeonato6 === "function") {
             salvarCampeonato6();
-            console.log("Campeonato salvo com sucesso!");
+            console.log("Resultados salvos!");
         } 
-
-        fecharModal();
     }
 
-    //Trava visual 
-    const jogoID = `${jogoAtualModal.fase}-${jogoAtualModal.jogo[0].time}-${jogoAtualModal.jogo[1].time}`;
+    const jogoID = `${jogoAtualModal.fase}-${jogoAtualModal.juego[0].time}-${jogoAtualModal.juego[1].time}`;
     const card = document.querySelector(`[data-id="${jogoID}"]`);
     if (card) {
         card.classList.add("finalizado");
@@ -216,15 +228,14 @@ function finalizarPartida() {
 
     fecharModal();
 }
-/*Gera as finais*/
+
 function gerarFinais(resultadosSemi) {
     const container = document.getElementById("chaves");
-    container.innerHTML = "<h2>Finais</h2>"; 
+    container.innerHTML = "<h2 style='grid-column: 1/-1; text-align:center;'>Finais Disponíveis</h2>"; 
 
     const vencedores = [];
     const perdedores = [];
 
-    //objetos do time para pegar os jogadores
     const dadosGeral = JSON.parse(localStorage.getItem("torneioAtual"));
     const todosOsTimes = [...dadosGeral.grupoA, ...dadosGeral.grupoB];
 
@@ -241,26 +252,23 @@ function gerarFinais(resultadosSemi) {
         }
     });
 
-    // Cria os cards finais no DOM
+    // Gera os novos cards na tela
     criarJogo(container, [vencedores[0], vencedores[1]], "Final");
     criarJogo(container, [perdedores[0], perdedores[1]], "3º lugar");
 }
 
-/*Finaliza o torneio e salva os resultados*/
 function finalizarTorneio() {
     const finalResults = JSON.parse(localStorage.getItem("finalResults"));
     if (!finalResults || !finalResults.campeao || !finalResults.terceiro) {
-        alert("Finalize a Final e a Disputa de 3º lugar!");
+        alert("Finalize a Final e a Disputa de 3º lugar para encerrar o campeonato!");
         return;
     }
     window.location.href = "../php/ranking.php";
 }
 
-/*Implementação do modo cartão*/
 function alternarModoCartao() {
     modoCartaoAtivo = !modoCartaoAtivo;
     const btn = document.getElementById("btn-modo-cartao");
-    
     if (modoCartaoAtivo) {
         btn.classList.add("ativo");
         btn.innerText = "Modo Cartão: ON 🟨";
@@ -284,5 +292,5 @@ function aplicarCartao(nomeJogador, timeLetra, elementoBotao) {
         elementoBotao.disabled = true; 
         alert(`O jogador ${nomeJogador} foi expulso!`);
     }
-    alternarModoCartao(); // Desativa o modo após o uso
+    alternarModoCartao();
 }
