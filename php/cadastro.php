@@ -15,7 +15,7 @@
             </div>
             <h1 style="text-align: center;">Cadastre-se</h1>
         </header>
-
+        <!-- Formulário de cadastro -->
         <form id="formCadastro">
             <input name="usuario" type="text" placeholder="Usuário" required aria-label="Nome de usuário">
 

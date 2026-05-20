@@ -68,7 +68,7 @@
             <button class="btn" onclick="concluirFaseDeGrupos()">Finalizar fase</button>
         </footer>
     </main>
-
+    <!-- Modal de registro de partida -->
     <section id="modalPartida" class="modal" role="dialog" aria-labelledby="tituloModal" aria-modal="true">
         <div class="modal-content">
             <header>

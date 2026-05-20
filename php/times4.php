@@ -12,7 +12,7 @@
         <header>
             <h1>Cadastro de times (4 times - Mata-mata)</h1>
         </header>
-
+        <!-- Formulário para cadastro de times e jogadores -->
         <form id="formTimes4">
             <fieldset class="card-config">
                 <legend><h2>Configuração do Torneio</h2></legend>

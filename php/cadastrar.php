@@ -1,5 +1,5 @@
 <?php
-
+#cadastra usuário no banco de dados
 header('Content-Type: application/json');
 
 include("conexao.php");

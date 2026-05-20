@@ -4,6 +4,7 @@ let jogoAtualModal = null;
 let modoCartaoAtivo = false;
 let cartoesPartida = {}; 
 
+/*Salva no localStorage*/
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     const idSave = urlParams.get('id');
@@ -11,13 +12,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const dados6 = JSON.parse(localStorage.getItem("torneioAtual"));
     const dados4 = JSON.parse(localStorage.getItem("times4"));
 
-    // 1. Verificação de Tipo (Redirecionamento)
+    //Verificação de Tipo (Redirecionamento)
     if (dados6 && !dados4 && !idSave) {
         window.location.href = "chaveamento6.php?id=" + urlParams.get('id');
         return; 
     }
 
-    // 2. Carregamento de Dados
+    //Carregamento de Dados
     if (idSave) {
         fetch(`../php/carregar_progresso.php?id_save=${idSave}`)
             .then(res => res.json())
@@ -33,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
         gerarChaveamento();
     }
 });
-// Gera o chaveamento inicial (semifinais)
+/*Gera o chaveamento inicial (semifinais)*/
 function gerarChaveamento(){
     const container = document.getElementById("chaves");
     container.innerHTML = ""; 
@@ -41,17 +42,17 @@ function gerarChaveamento(){
     const dadosSalvos = JSON.parse(localStorage.getItem("times4"));
     if(!dadosSalvos || !dadosSalvos.times) return;
 
-    // 1. SEMPRE carregamos os resultados atuais do localStorage
+    // SEMPRE carrega os resultados atuais do localStorage
     const resultadosSemi = JSON.parse(localStorage.getItem("resultadosSemi")) || [];
 
-    // 2. VERIFICAÇÃO CRÍTICA: Se já temos 2 resultados, pula direto para as finais
+    //VERIFICAÇÃO CRÍTICA: Se já temos 2 resultados, pula direto para as finais
     if (resultadosSemi.length >= 2) {
         console.log("Detectado: Semifinais concluídas. Renderizando Finais...");
         gerarFinais(resultadosSemi);
-        return; // IMPORTANTE: Encerra aqui para não desenhar as semis embaixo
+        return; //IMPORTANTE: Encerra aqui para não desenhar as semis embaixo
     }
 
-    // 3. Caso contrário, desenha as Semifinais (fluxo normal)
+    //Caso contrário, desenha as Semifinais (fluxo normal)
     let times = dadosSalvos.times;
     const jogo1 = [times[0], times[1]];
     const jogo2 = [times[2], times[3]];
@@ -69,7 +70,7 @@ function criarJogo(container, jogo, fase){
 
     div.innerText = `${jogo[0].time} vs ${jogo[1].time} (${fase})`;
 
-    // VERIFICAÇÃO DE JOGO FINALIZADO (Melhorada)
+    // VERIFICAÇÃO DE JOGO FINALIZADO
     const resultadosSemi = JSON.parse(localStorage.getItem("resultadosSemi")) || [];
     const finalResults = JSON.parse(localStorage.getItem("finalResults")) || {};
 
@@ -129,13 +130,13 @@ function addGol(time){
 }
 /* Carrega jogadores no modal */ 
 function carregarJogadoresModal(timeA, timeB) {
-    // 1. Pega o objeto completo
+    //Pega o objeto completo
     const dadosSalvos = JSON.parse(localStorage.getItem("times4"));
     
-    // 2. Extrai a lista de times de forma segura
+    //Extrai a lista de times de forma segura
     const listaTimes = (dadosSalvos && dadosSalvos.times) ? dadosSalvos.times : [];
 
-    // 3. Busca os times dentro da lista extraída
+    //Busca os times dentro da lista extraída
     const objTimeA = listaTimes.find(t => t.time === timeA) || { jogadores: [] };
     const objTimeB = listaTimes.find(t => t.time === timeB) || { jogadores: [] };
 
@@ -173,7 +174,7 @@ function registrarGol(nomeJogador, lado){
     localStorage.setItem("artilharia", JSON.stringify(artilharia));
 }
 
-// Finaliza partida
+/*Finaliza partida*/
 function finalizarPartida(){
     //em caso de empate, não termina a partida
     if(placarA === placarB){
@@ -267,7 +268,7 @@ function gerarFinais(resultadosSemi){
     }
 }
 
-// Finaliza torneio e vai para ranking
+/*Finaliza torneio e vai para ranking*/
 function finalizarTorneio(){
     const finalResults = JSON.parse(localStorage.getItem("finalResults"));
     if(!finalResults || !finalResults.campeao){

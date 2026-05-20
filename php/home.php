@@ -1,4 +1,5 @@
-<?php require("auth.php"); ?>
+
+<?php require("auth.php"); #auth é a autenticação do usuário?>
 
 
 <!DOCTYPE html>

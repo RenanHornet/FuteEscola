@@ -29,7 +29,7 @@
                     <strong>Escolha o formato do campeonato:</strong>
                 </p>
             </article>
-
+            <!-- Botões para escolher o formato do campeonato -->
             <div class="container-botoes">
                 <button class="btn" onclick="selecionarFormato(4)">
                     Campeonato Simples (4 times)

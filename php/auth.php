@@ -1,5 +1,6 @@
-<?php
 
+<?php
+#garante o acesso.
 session_start();
 
 if(!isset($_SESSION['usuario_id'])){

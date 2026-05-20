@@ -14,7 +14,7 @@ function salvarCampeonato4() {
         backup[key] = localStorage.getItem(key);
     }
 
-    // CORREÇÃO CRÍTICA: Captura o ID diretamente da URL do navegador (?id=17)
+    // Captura o ID diretamente da URL do navegador 
     const urlParams = new URLSearchParams(window.location.search);
     const idSave = urlParams.get('id');
 
@@ -23,7 +23,7 @@ function salvarCampeonato4() {
     formData.append('tipo_torneio', 4);
     formData.append('dados_json', JSON.stringify(backup));
 
-    // CORREÇÃO CRÍTICA: Se o ID existir na URL, envia ele para o PHP saber que deve atualizar (UPDATE)
+    // Se o ID existir na URL, envia ele para o PHP saber que deve atualizar (UPDATE)
     if (idSave) {
         formData.append('id_save', idSave);
     }
@@ -51,14 +51,5 @@ function salvarCampeonato4() {
     .catch(err => {
         console.error("Erro:", err);
         alert("⚠️ Falha na conexão com o servidor.");
-    });
-}
-
-function executarSalvamentoManual() {
-    salvarCampeonato4().then(data => {
-        if (data && data.status === "sucesso") {
-            // O alert aqui confirma para o usuário que o clique funcionou
-            alert("Torneio '" + (JSON.parse(localStorage.getItem("times4")).nome) + "' atualizado no banco de dados!");
-        }
     });
 }

@@ -45,7 +45,7 @@ function verificarEFluxoInterface() {
         renderizarSemifinais(dadosSemis);
     }
 }
-
+/*Renderiza as semifinais*/
 function renderizarSemifinais(dados) {
     const container = document.getElementById("chaves");
     container.innerHTML = "";
@@ -59,7 +59,7 @@ function renderizarSemifinais(dados) {
         criarJogo(container, j.times, j.fase);
     });
 }
-
+/*Cria o elemento do jogo*/ 
 function criarJogo(container, jogo, fase) {
     const div = document.createElement("div");
     div.className = "match-box";
@@ -91,6 +91,8 @@ function criarJogo(container, jogo, fase) {
     container.appendChild(div);
 }
 
+/* --- Lógicas do modal de partida --- */
+/*Cria o modal de registro de partida*/ 
 function abrirModal(jogo, fase){
     jogoAtualModal = { juego: jogo, fase };
 
@@ -105,7 +107,7 @@ function abrirModal(jogo, fase){
     carregarJogadoresModal(jogo[0].time, jogo[1].time);
     document.getElementById("modalPartida").style.display = "flex";
 }
-
+/*Fecha o modal*/
 function fecharModal(){
     document.getElementById("modalPartida").style.display = "none";
     placarA = 0; 
@@ -113,7 +115,7 @@ function fecharModal(){
     modoCartaoAtivo = false;
     cartoesPartida = {};
 }
-
+/*Carrega os jogadores no modal*/ 
 function carregarJogadoresModal(timeA, timeB) {
     const dadosGeral = JSON.parse(localStorage.getItem("torneioAtual"));
     const todosOsTimes = [...dadosGeral.grupoA, ...dadosGeral.grupoB];
@@ -124,7 +126,7 @@ function carregarJogadoresModal(timeA, timeB) {
     criarBotoesGols(objTimeA.jogadores, "jogadoresA", "mScoreA", "jogador-btn");
     criarBotoesGols(objTimeB.jogadores, "jogadoresB", "mScoreB", "jogador-btn2");
 }
-
+/*Cria o botão dos jogadores*/
 function criarBotoesGols(jogadores, containerId, placarId, classeCor) {
     const container = document.getElementById(containerId);
     container.innerHTML = ""; 
@@ -147,7 +149,7 @@ function criarBotoesGols(jogadores, containerId, placarId, classeCor) {
         container.appendChild(btn);
     });
 }
-
+/*Registra os gols dos jogadores*/ 
 function registrarGol(nomeJogador, lado) {
     if (lado === "A") {
         placarA++;
@@ -162,7 +164,7 @@ function registrarGol(nomeJogador, lado) {
     artilharia[nomeJogador]++;
     localStorage.setItem("artilharia", JSON.stringify(artilharia));
 }
-
+/*Finaliza a partida e salva os resultados*/
 function finalizarPartida() {
     if (placarA === placarB) {
         alert("A partida está empatada! \nDe acordo com o regulamento, realize as penalidades alternadas.");
@@ -228,7 +230,7 @@ function finalizarPartida() {
 
     fecharModal();
 }
-
+/*Gera as finais*/
 function gerarFinais(resultadosSemi) {
     const container = document.getElementById("chaves");
     container.innerHTML = "<h2 style='grid-column: 1/-1; text-align:center;'>Finais Disponíveis</h2>"; 
@@ -256,7 +258,7 @@ function gerarFinais(resultadosSemi) {
     criarJogo(container, [vencedores[0], vencedores[1]], "Final");
     criarJogo(container, [perdedores[0], perdedores[1]], "3º lugar");
 }
-
+/*FInaliza e vai pro ranking*/
 function finalizarTorneio() {
     const finalResults = JSON.parse(localStorage.getItem("finalResults"));
     if (!finalResults || !finalResults.campeao || !finalResults.terceiro) {

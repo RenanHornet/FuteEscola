@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // --- LÓGICA DO PODIUM ---
+    /*LÓGICA DO PODIUM */
     const finalResults = JSON.parse(localStorage.getItem("finalResults")) || {};
     const tabelaBody = document.querySelector("#tabelaRanking tbody");
 
     if (tabelaBody) {
         tabelaBody.innerHTML = "";
-
+        // Caso não tenha terminado o campeonato
         if (!finalResults.campeao) {
             tabelaBody.innerHTML = `<tr><td colspan="2">Finalize o torneio para ver o ranking</td></tr>`;
         } else {
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 { posicao: 3, time: finalResults.terceiro },
                 { posicao: 4, time: finalResults.quarto }
             ];
-
+            //Cria a tabela do ranking
             ranking.forEach(item => {
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
@@ -27,20 +27,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- LÓGICA DA ARTILHARIA ---
+    /*Lógica da Artilharia */
     const artilharia = JSON.parse(localStorage.getItem("artilharia")) || {}; 
     const divArtilheiros = document.getElementById("topArtilheiros");
 
     if (divArtilheiros) {
         divArtilheiros.innerHTML = ""; 
-
+        //Organiza e fatia os 3 primeiros
         const rankingArtilheiros = Object.entries(artilharia)
             .sort((a, b) => b[1] - a[1])
             .slice(0, 3);
-
+        //Caso não tenha saido nenhum gol ainda. 
         if (rankingArtilheiros.length === 0) {
             divArtilheiros.innerHTML = "<p>Nenhum gol registrado.</p>";
         } else {
+            //emoji de medalha para os 3 primeiros 
             rankingArtilheiros.forEach((item, index) => {
                 let medalha = "";
                 if (index === 0) medalha = "🥇";

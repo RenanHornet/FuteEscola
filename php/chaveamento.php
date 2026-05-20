@@ -24,13 +24,6 @@
         <section class="grid" id="chaves" aria-live="polite">
             <!-- O JS preenche o chaveamento aqui -->
         </section>
-        <section>
-            <div style="text-align: center; margin: 20px;">
-                <button onclick="executarSalmanetoManual()" class="btn-salvar">
-                    💾 Salvar Resultados e Artilharia
-                </button>
-            </div>
-        </section>
 
         <footer class="container-botoes">
             <button class="btn" onclick="finalizarTorneio()">

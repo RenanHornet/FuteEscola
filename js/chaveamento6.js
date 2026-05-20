@@ -10,18 +10,18 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(res => res.json())
             .then(res => {
                 if (res.status === "sucesso") {
-                    // 1. Trata se o banco devolveu string ou objeto puro
+                    //Trata se o banco devolveu string ou objeto puro
                     let dadosDB = res.dados;
                     if (typeof dadosDB === "string") {
                         dadosDB = JSON.parse(dadosDB);
                     }
                     
-                    // 2. Limpa dados antigos locais para evitar conflitos
+                    //Limpa dados antigos locais para evitar conflitos
                     localStorage.removeItem("torneioAtual");
                     localStorage.removeItem("artilharia");
                     localStorage.removeItem("semifinal6_dados");
 
-                    // 3. Injeta cada chave de volta no localStorage tratando sub-JSONs
+                    //Injeta cada chave de volta no localStorage tratando sub-JSONs
                     Object.keys(dadosDB).forEach(key => {
                         let valor = dadosDB[key];
                         // Se o valor veio como string contendo um JSON (comum no banco), mantém como string pura pro localStorage
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     });
 
-                    // 4. Agora que os dados estão perfeitamente restaurados, desenha a tela
+                    //Agora que os dados estão perfeitamente restaurados, desenha a tela
                     carregarInterface6();
                 } else {
                     alert("Erro ao carregar torneio: " + res.mensagem);
@@ -93,6 +93,7 @@ function renderizarJogos(partidas) {
         });
     });
 }
+/*Atualiza a classifficação por grupos*/
 function atualizarClassificacao() {
     const dados = JSON.parse(localStorage.getItem("torneioAtual"));
     let statusGrupos = { A: {}, B: {} };
@@ -119,7 +120,7 @@ function atualizarClassificacao() {
     });
 }
 
-// --- PARTE 3: LÓGICA DO MODAL (SÚMULA) ---
+//LÓGICA DO MODAL (SÚMULA)
 let jogoAtual = null; 
 
 function abrirModalSúmula(grupo, index) {
@@ -136,7 +137,7 @@ function abrirModalSúmula(grupo, index) {
 
     document.getElementById("modalPartida").style.display = "flex";
 }
-
+/*Carrega os jogadores no modal*/
 function carregarJogadoresModal(timeA, timeB) {
     const dadosGeral = JSON.parse(localStorage.getItem("torneioAtual"));
     // Une os grupos para não dar erro de busca
@@ -149,7 +150,7 @@ function carregarJogadoresModal(timeA, timeB) {
     criarBotoesGols(objTimeA.jogadores, "jogadoresA", "mScoreA", "jogador-btn");
     criarBotoesGols(objTimeB.jogadores, "jogadoresB", "mScoreB", "jogador-btn2");
 }
-
+/*Cria os botoes dos jogadores*/
 function criarBotoesGols(jogadores, containerId, placarId, classeCor) {
     const container = document.getElementById(containerId);
     container.innerHTML = ""; 
@@ -176,7 +177,7 @@ function criarBotoesGols(jogadores, containerId, placarId, classeCor) {
         container.appendChild(btn);
     });
 }
-
+/*registra gol de acordo com o jogador*/
 function registrarGol(nomeJogador) {
     let artilharia = JSON.parse(localStorage.getItem("artilharia")) || {};
     if (!artilharia[nomeJogador]) artilharia[nomeJogador] = 0;
@@ -184,7 +185,7 @@ function registrarGol(nomeJogador) {
     localStorage.setItem("artilharia", JSON.stringify(artilharia));
 }
 
-
+/*logica de finalizar a partida e organizar os gols*/
 function finalizarPartida() {
     const dados = JSON.parse(localStorage.getItem("torneioAtual"));
     const { grupo, index } = jogoAtual;

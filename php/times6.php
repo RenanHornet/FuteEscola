@@ -11,12 +11,12 @@
         <header>
             <h1>Cadastro de times (<span id="num-time">1</span>/6)</h1>
         </header>
-
+        <!-- Seção para o nome do campeonato -->
         <section class="card-config">
             <label for="nome-campeonato">Nome do Campeonato:</label>
             <input class= "nomes-times"type="text" id="nome-campeonato" placeholder="Ex: Interclasse 2026 - 7º Ano" required aria-label="Nome do Campeonato">
         </section>
-        
+        <!-- Formulário para cadastro dos times -->
         <form id="formTimes6">
             <fieldset class="card-time" style="border: none; padding: 0; margin: 0;">
                 <legend><h2 id="titulo-time">Time 1</h2></legend>

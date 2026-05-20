@@ -3,20 +3,20 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("Home carregada");
 });
 
-// Função para buscar o campeonato salvo no banco de dados
+/*unção para buscar o campeonato salvo no banco de dados*/
 function carregarCampeonatoDoBanco() {
-    // Faz a requisição ao arquivo PHP que criamos
+    // Faz a requisição ao arquivo PHP 
     fetch("../php/carregar_progresso.php")
     .then(res => res.json())
     .then(data => {
         if (data.status === "sucesso") {
-            // O banco nos devolve uma string que é o backup do localStorage
+            // O banco devolve uma string que é o backup do localStorage
             const backup = JSON.parse(data.dados);
             
-            // Limpamos o navegador para garantir que dados antigos não interfiram
+            // Limpa o navegador para garantir que dados antigos não interfiram
             localStorage.clear();
             
-            // Restauramos item por item (times, gols, artilharia, nomes, etc)
+            // Restaura item por item (times, gols, artilharia, nomes, etc)
             Object.keys(backup).forEach(chave => {
                 localStorage.setItem(chave, backup[chave]);
             });

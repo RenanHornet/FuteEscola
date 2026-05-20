@@ -17,7 +17,7 @@ function adicionarTime() {
     const nomeTime = document.getElementById("nome-time").value.trim();
     const inputsJogadores = document.querySelectorAll(".jog-input");
     let jogadores = [];
-
+    //Verifica o nome do time
     if (nomeTime === "") {
         alert("Por favor, digite o nome do time.");
         return;
@@ -33,7 +33,7 @@ function adicionarTime() {
         time: nomeTime,
         jogadores: jogadores
     });
-
+    //confirma no console que o time foi adicionado
     console.log("Time adicionado:", nomeTime, "Total agora:", listaDeTimes.length);
 
     if (contador < 6) {
@@ -54,7 +54,7 @@ function finalizarCadastro() {
     if (listaDeTimes.length === 5) {
         adicionarTime();
     }
-
+    //Não prossegue sem os 6 times cadastrados
     if (listaDeTimes.length < 6) {
         alert("Erro: Você precisa cadastrar os 6 times antes de gerar o campeonato!");
         return;
@@ -70,7 +70,7 @@ function finalizarCadastro() {
     }
 
     limparDadosAntigos(); 
-
+    // Embaralha os times e fatia em grupos A e B 
     listaDeTimes.sort(() => Math.random() - 0.5);
     const grupoA = listaDeTimes.slice(0, 3);
     const grupoB = listaDeTimes.slice(3, 6);
@@ -83,16 +83,16 @@ function finalizarCadastro() {
         partidas: gerarConfrontosIniciais(grupoA, grupoB)
     };
 
-    // 1. Salva no localStorage com a chave de 6 times
+    // Salva no localStorage com a chave de 6 times
     localStorage.setItem("torneioAtual", JSON.stringify(dadosTorneio));
 
-    // 2. ENVIO PARA O BANCO
+    // ENVIO PARA O BANCO
     salvarCampeonato6().then((resposta) => {
         if (resposta && resposta.status === "sucesso") {
             alert("Campeonato '" + nomeCampeonato + "' criado com sucesso!");
             
-            // MELHORIA: Em vez de ir para a lista geral, 
-            // vamos direto para o jogo enviando o ID que o banco acabou de gerar
+            /*MELHORIA: Em vez de ir para a lista geral, 
+            vamos direto para o jogo enviando o ID que o banco acabou de gerar*/
             if (resposta.id_save) {
                 window.location.href = "chaveamento6.php?id=" + resposta.id_save;
             } else {
@@ -107,7 +107,7 @@ function finalizarCadastro() {
     });
 }
 
-/*gera os grupos A e B */ 
+/*gera os jogos grupos A e B */ 
 function gerarConfrontosIniciais(ga, gb) {
     return {
         "A": [

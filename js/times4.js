@@ -5,7 +5,7 @@ function iniciarNovoTorneio() {
     localStorage.removeItem("artilharia");
     localStorage.removeItem("resultadosSemi");
     localStorage.removeItem("torneioAtual"); // limpa o de 6 times
-    localStorage.removeItem("times4");       // ADICIONE ESTA LINHA: limpa o de 4 times anterior
+    localStorage.removeItem("times4");       // Limpa o de 4 times anterior
 }
 
 
@@ -22,11 +22,11 @@ function salvarTimes4(){
     iniciarNovoTorneio(); // Limpa os dados anteriores
     const times = [];
 
-    // 1. Captura o nome do campeonato do novo campo HTML
+    // Captura o nome do campeonato do novo campo HTML
     const nomeCampInput = document.getElementById("nome-campeonato");
     const nomeCampeonato = nomeCampInput ? nomeCampInput.value.trim() : "";
 
-    // 2. Coleta os dados de cada time nos cards
+    // Coleta os dados de cada time nos cards
     document.querySelectorAll("fieldset.card-time").forEach((card) => {
     const inputNomeTime = card.querySelector(".nomes-times");
 
@@ -53,13 +53,13 @@ function salvarTimes4(){
     }
 });
 
-    // 3. Validação: Nome do torneio e quantidade de times
+    // Validação: Nome do torneio e quantidade de times
     if (nomeCampeonato === "" || times.length < 4) {
         alert("Por favor, dê um nome ao torneio e cadastre os 4 times!");
         return;
     }
 
-    // 4. EMBARALHAR (Shuffle)
+    //  EMBARALHAR (Shuffle)
     // O sorteio é feito aqui para que a ordem aleatória seja salva no banco
     for (let i = times.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -72,10 +72,10 @@ function salvarTimes4(){
         times: times
     };
 
-    // 6. Salva no navegador (localStorage)
+    // Salva no navegador (localStorage)
     localStorage.setItem("times4", JSON.stringify(dadosMataMata));
 
-    // 7. Chama a função do save4.js e aguarda a conclusão
+    // Chama a função do save4.js e aguarda a conclusão
     salvarCampeonato4().then((data) => {
         if (data && data.status === "sucesso") {
             if (data.id_save) {
