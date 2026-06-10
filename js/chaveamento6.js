@@ -98,14 +98,18 @@ function atualizarClassificacao() {
     const dados = JSON.parse(localStorage.getItem("torneioAtual"));
     let statusGrupos = { A: {}, B: {} };
 
-    dados.grupoA.forEach(t => statusGrupos.A[t.time] = { p: 0, sg: 0 });
-    dados.grupoB.forEach(t => statusGrupos.B[t.time] = { p: 0, sg: 0 });
+    // Inicializa os dados
+    dados.grupoA.forEach(t => statusGrupos.A[t.time] = { p: 0, sg: 0, gp: 0 });
+    dados.grupoB.forEach(t => statusGrupos.B[t.time] = { p: 0, sg: 0, gp: 0 });
 
     ["A", "B"].forEach(g => {
         dados.partidas[g].forEach(jogo => {
             if (jogo.status === 'f') {
                 statusGrupos[g][jogo.t1].sg += (jogo.gols1 - jogo.gols2);
                 statusGrupos[g][jogo.t2].sg += (jogo.gols2 - jogo.gols1);
+                statusGrupos[g][jogo.t1].gp += jogo.gols1;
+                statusGrupos[g][jogo.t2].gp += jogo.gols2;
+
                 if (jogo.gols1 > jogo.gols2) statusGrupos[g][jogo.t1].p += 3;
                 else if (jogo.gols2 > jogo.gols1) statusGrupos[g][jogo.t2].p += 3;
                 else { statusGrupos[g][jogo.t1].p += 1; statusGrupos[g][jogo.t2].p += 1; }
@@ -113,11 +117,77 @@ function atualizarClassificacao() {
         });
         
         const tbody = document.querySelector(`#tabela-${g} tbody`);
-        const ordenado = Object.entries(statusGrupos[g]).sort((a, b) => b[1].p - a[1].p || b[1].sg - a[1].sg);
-        tbody.innerHTML = ordenado.map(item => `
-            <tr><td>${item[0]}</td><td>${item[1].p}</td><td>${item[1].sg}</td></tr>
+        
+        // Ordenação encadeada padrão
+        const ordenado = Object.entries(statusGrupos[g]).sort((a, b) => {
+            return b[1].p - a[1].p || b[1].sg - a[1].sg || b[1].gp - a[1].gp;
+        });
+
+        // Se o usuário JÁ mexeu manualmente na ordem devido a um empate, vamos respeitar a ordem salva
+        // Para isso, vamos ordenar baseando-se na ordem atual que está salva no dados.grupoX
+        const listaTimesOriginal = g === "A" ? dados.grupoA : dados.grupoB;
+        ordenado.sort((a, b) => {
+            // Se as estatísticas forem rigorosamente iguais, decide pela ordem que está salva no array do localStorage
+            if (a[1].p === b[1].p && a[1].sg === b[1].sg && a[1].gp === b[1].gp) {
+                const idxA = listaTimesOriginal.findIndex(t => t.time === a[0]);
+                const idxB = listaTimesOriginal.findIndex(t => t.time === b[0]);
+                return idxA - idxB;
+            }
+            return b[1].p - a[1].p || b[1].sg - a[1].sg || b[1].gp - a[1].gp;
+        });
+
+        // Renderiza o HTML com um evento de clique para desempate manual
+        tbody.innerHTML = ordenado.map((item, index) => `
+            <tr onclick="ajustarPosicaoEmpate('${g}', ${index})" style="cursor: pointer;" title="Em caso de empate absoluto, clique para alternar posição">
+                <td>${item[0]}</td>
+                <td>${item[1].p}</td>
+                <td>${item[1].sg}</td>
+                <td>${item[1].gp}</td>
+            </tr>
         `).join('');
+
+        // ALERTA DE EMPATE ABSOLUTO
+        if (ordenado.length === 3) {
+            const t1 = ordenado[0][1];
+            const t2 = ordenado[1][1];
+            const t3 = ordenado[2][1];
+
+            if (t1.p === t3.p && t1.sg === t3.sg && t1.gp === t3.gp && t1.p > 0) {
+                alert(`⚠️ EMPATE ABSOLUTO NO GRUPO ${g}!\n\nOs 3 times terminaram iguais.\n\nRegulamento: Defina o resultado na quadra (pênaltis/sorteio) e depois CLIQUE em cima do nome do time na tabela para ajustar quem fica em 1º, 2º e 3º.`);
+            }
+            else if (t2.p === t3.p && t2.sg === t3.sg && t2.gp === t3.gp && t2.p > 0) {
+                alert(`⚠️ EMPATE ABSOLUTO PELA ÚLTIMA VAGA DO GRUPO ${g}!\n\nRegulamento: Defina na quadra e CLIQUE no time na tabela para alternar as posições se necessário.`);
+            }
+        }
     });
+}
+
+//AJUSTA EMPATE ABSOLUTO (SALDO DE GOLS, PONTOS, GOLS PRÓ)
+function ajustarPosicaoEmpate(grupo, indexAtual) {
+    const dados = JSON.parse(localStorage.getItem("torneioAtual"));
+    const listaTimes = grupo === "A" ? dados.grupoA : dados.grupoB;
+
+    // Se clicou no último colocado (índice 2), altera com o de cima (índice 1)
+    let primIdx = indexAtual;
+    let segIdx = indexAtual === 2 ? 1 : indexAtual + 1;
+
+    // Inverte os times no array do localStorage
+    const temp = listaTimes[primIdx];
+    listaTimes[primIdx] = listaTimes[segIdx];
+    listaTimes[segIdx] = temp;
+
+    if (grupo === "A") dados.grupoA = listaTimes;
+    else dados.grupoB = listaTimes;
+
+    localStorage.setItem("torneioAtual", JSON.stringify(dados));
+    
+    // Atualiza a tela para mostrar a nova posição
+    atualizarClassificacao();
+
+    // Persiste no banco de dados a nova ordem dos times
+    if (typeof salvarCampeonato6 === "function") {
+        salvarCampeonato6();
+    }
 }
 
 //LÓGICA DO MODAL (SÚMULA)
@@ -224,22 +294,30 @@ function fecharModal() {
 function obterClassificacao(grupo, partidas) {
     let status = {};
     
-    // Inicializa
-    grupo.forEach(t => status[t.time] = { time: t.time, jogadores: t.jogadores, p: 0, sg: 0 });
+    grupo.forEach(t => status[t.time] = { time: t.time, jogadores: t.jogadores, p: 0, sg: 0, gp: 0 });
 
-    // Calcula
     partidas.forEach(jogo => {
         if (jogo.status === 'f') {
             status[jogo.t1].sg += (jogo.gols1 - jogo.gols2);
             status[jogo.t2].sg += (jogo.gols2 - jogo.gols1);
+            status[jogo.t1].gp += jogo.gols1;
+            status[jogo.t2].gp += jogo.gols2;
+
             if (jogo.gols1 > jogo.gols2) status[jogo.t1].p += 3;
             else if (jogo.gols2 > jogo.gols1) status[jogo.t2].p += 3;
             else { status[jogo.t1].p += 1; status[jogo.t2].p += 1; }
         }
     });
 
-    // Ordena e retorna o objeto completo do time (para não perder os jogadores)
-    return Object.values(status).sort((a, b) => b.p - a.p || b.sg - a.sg);
+    // Ordena respeitando a ordem física do array original em caso de empate absoluto
+    return Object.values(status).sort((a, b) => {
+        if (a.p === b.p && a.sg === b.sg && a.gp === b.gp) {
+            const idxA = grupo.findIndex(t => t.time === a.time);
+            const idxB = grupo.findIndex(t => t.time === b.time);
+            return idxA - idxB;
+        }
+        return b.p - a.p || b.sg - a.sg || b.gp - a.gp;
+    });
 }
 
 /* Função que conclui a fase de grupos*/

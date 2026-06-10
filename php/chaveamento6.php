@@ -33,6 +33,7 @@
                                 <th>Time</th>
                                 <th>Pontos</th>
                                 <th>Saldo de gols</th>
+                                <th>Gols Prós</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -47,6 +48,7 @@
                                 <th>Time</th>
                                 <th>Pontos</th>
                                 <th>Saldo de gols</th>
+                                <th>Gols Prós</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
