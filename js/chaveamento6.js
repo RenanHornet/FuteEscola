@@ -123,8 +123,7 @@ function atualizarClassificacao() {
             return b[1].p - a[1].p || b[1].sg - a[1].sg || b[1].gp - a[1].gp;
         });
 
-        // Se o usuário JÁ mexeu manualmente na ordem devido a um empate, vamos respeitar a ordem salva
-        // Para isso, vamos ordenar baseando-se na ordem atual que está salva no dados.grupoX
+        
         const listaTimesOriginal = g === "A" ? dados.grupoA : dados.grupoB;
         ordenado.sort((a, b) => {
             // Se as estatísticas forem rigorosamente iguais, decide pela ordem que está salva no array do localStorage
@@ -146,23 +145,10 @@ function atualizarClassificacao() {
             </tr>
         `).join('');
 
-        // ALERTA DE EMPATE ABSOLUTO
-        if (ordenado.length === 3) {
-            const t1 = ordenado[0][1];
-            const t2 = ordenado[1][1];
-            const t3 = ordenado[2][1];
-
-            if (t1.p === t3.p && t1.sg === t3.sg && t1.gp === t3.gp && t1.p > 0) {
-                alert(`⚠️ EMPATE ABSOLUTO NO GRUPO ${g}!\n\nOs 3 times terminaram iguais.\n\nRegulamento: Defina o resultado na quadra (pênaltis/sorteio) e depois CLIQUE em cima do nome do time na tabela para ajustar quem fica em 1º, 2º e 3º.`);
-            }
-            else if (t2.p === t3.p && t2.sg === t3.sg && t2.gp === t3.gp && t2.p > 0) {
-                alert(`⚠️ EMPATE ABSOLUTO PELA ÚLTIMA VAGA DO GRUPO ${g}!\n\nRegulamento: Defina na quadra e CLIQUE no time na tabela para alternar as posições se necessário.`);
-            }
-        }
     });
 }
 
-//AJUSTA EMPATE ABSOLUTO (SALDO DE GOLS, PONTOS, GOLS PRÓ)
+//Ajusta o empate absoluto manualmente 
 function ajustarPosicaoEmpate(grupo, indexAtual) {
     const dados = JSON.parse(localStorage.getItem("torneioAtual"));
     const listaTimes = grupo === "A" ? dados.grupoA : dados.grupoB;
@@ -255,32 +241,88 @@ function registrarGol(nomeJogador) {
     localStorage.setItem("artilharia", JSON.stringify(artilharia));
 }
 
-/*logica de finalizar a partida e organizar os gols*/
+
+/*Logica de finalizar a partida e organizar os gols*/
 function finalizarPartida() {
     const dados = JSON.parse(localStorage.getItem("torneioAtual"));
-    const { grupo, index } = jogoAtual;
-
-    dados.partidas[grupo][index].gols1 = parseInt(document.getElementById("mScoreA").innerText);
-    dados.partidas[grupo][index].gols2 = parseInt(document.getElementById("mScoreB").innerText);
-    dados.partidas[grupo][index].status = 'f';
-
-    localStorage.setItem("torneioAtual", JSON.stringify(dados));
-    fecharModal();
-    renderizarJogos(dados.partidas);
-    atualizarClassificacao();
-
-    //Salva o estado atualizado no localStorage
-    localStorage.setItem("torneioAtual", JSON.stringify(dados));
-
-    //Persiste no banco de dados automaticamente
-    if (typeof salvarCampeonato6 === "function") {
-        salvarCampeonato6();
-        console.log("Progresso salvo automaticamente no banco.");
+    
+    // CORREÇÃO: Usando a variável global correta 'jogoAtual' que foi definida no abrirModalSúmula
+    if (!jogoAtual) {
+        alert("Erro: Nenhuma partida ativa encontrada.");
+        return;
     }
+    
+    const grupo = jogoAtual.grupo;
+    const index = jogoAtual.index;
 
-    fecharModal();
-    renderizarJogos(dados.partidas);
+    
+    const placarA = parseInt(document.getElementById("mScoreA").innerText) || 0;
+    const placarB = parseInt(document.getElementById("mScoreB").innerText) || 0;
+
+    dados.partidas[grupo][index].gols1 = placarA;
+    dados.partidas[grupo][index].gols2 = placarB;
+    dados.partidas[grupo][index].status = 'f'; // Define o status como finalizado
+
+    localStorage.setItem("torneioAtual", JSON.stringify(dados));
+    
     atualizarClassificacao();
+    
+    
+    renderizarJogos(dados.partidas); 
+    
+    fecharModal();
+
+    // Salva no banco e, logo em seguida, checa se o grupo acabou e se empatou absoluto!
+    if (typeof salvarCampeonato6 === "function") {
+        salvarCampeonato6().then(() => {
+            verificarEmpateAoTerminarGrupo(grupo); // Dispara a instrução no momento perfeito
+        }).catch(err => {
+            console.error("Erro ao salvar progresso automaticamente:", err);
+            verificarEmpateAoTerminarGrupo(grupo);
+        });
+    } else {
+        verificarEmpateAoTerminarGrupo(grupo);
+    }
+}
+
+/* Checa se TODOS os jogos do grupo acabaram e avisa  se houver empate absoluto */
+function verificarEmpateAoTerminarGrupo(grupo) {
+    const dados = JSON.parse(localStorage.getItem("torneioAtual"));
+    
+    // Verifica se todos os 3 jogos desse grupo específico já foram jogados ('f')
+    const todosJogados = dados.partidas[grupo].every(jogo => jogo.status === 'f');
+    
+    // Se a rodada do grupo ainda não acabou, sai da função sem incomodar ninguém
+    if (!todosJogados) return;
+
+    // Se acabou, vamos calcular rapidamente o resultado para ver se há empate absoluto
+    let status = {};
+    const listaTimes = grupo === "A" ? dados.grupoA : dados.grupoB;
+    listaTimes.forEach(t => status[t.time] = { p: 0, sg: 0, gp: 0 });
+
+    dados.partidas[grupo].forEach(jogo => {
+        status[jogo.t1].sg += (jogo.gols1 - jogo.gols2);
+        status[jogo.t2].sg += (jogo.gols2 - jogo.gols1);
+        status[jogo.t1].gp += jogo.gols1;
+        status[jogo.t2].gp += jogo.gols2;
+        if (jogo.gols1 > jogo.gols2) status[jogo.t1].p += 3;
+        else if (jogo.gols2 > jogo.gols1) status[jogo.t2].p += 3;
+        else { status[jogo.t1].p += 1; status[jogo.t2].p += 1; }
+    });
+
+    const ordenado = Object.values(status).sort((a, b) => b.p - a.p || b.sg - a.sg || b.gp - a.gp);
+    
+    // Valida os cenários de empate absoluto
+    const t1 = ordenado[0];
+    const t2 = ordenado[1];
+    const t3 = ordenado[2];
+
+    if (t1.p === t3.p && t1.sg === t3.sg && t1.gp === t3.gp) {
+        alert(`⚠️ FIM DA RODADA: EMPATE ABSOLUTO NO GRUPO ${grupo}!\n\nTodos os 3 times terminaram rigorosamente iguais.\n\nInstrução: Realize o desempate (pênaltis/sorteio) na quadra. Depois, CLIQUE sobre as linhas dos times na tabela do Grupo ${grupo} para ajustar a ordem correta antes de avançar para as semifinais.`);
+    } 
+    else if (t2.p === t3.p && t2.sg === t3.sg && t2.gp === t3.gp) {
+        alert(`⚠️ FIM DA RODADA: EMPATE ABSOLUTO PELA ÚLTIMA VAGA DO GRUPO ${grupo}!\n\nO 2º e 3º colocado terminaram idênticos.\n\nInstrução: Defina quem passa na quadra e use o CLIQUE na tabela para corrigir as posições se necessário.`);
+    }
 }
 
 function fecharModal() {

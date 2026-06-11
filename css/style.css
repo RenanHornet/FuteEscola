@@ -538,3 +538,68 @@ tr:nth-child(even) {
 .check-perigo:checked {
     accent-color: red; /* O checkbox fica vermelho quando a 5ª falta é marcada */
 }
+
+
+/* Campeonatos salvos */
+.btn-abrir {
+    background: var(--primary);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+.btn-abrir:hover {
+    background: var(--secondary);
+    color: white;
+}
+
+/*Responsividade para dispositivos móveis*/
+@media (max-width: 600px) {
+    /* Ajusta a barra de navegação para não quebrar o layout */
+    .navbar {
+        padding: 12px 15px;
+        flex-wrap: wrap; 
+        gap: 10px;
+    }
+
+    .navbar a {
+        font-size: 15px; 
+        padding: 6px 10px;
+        flex: 1 1 calc(50% - 10px); 
+        text-align: center;
+    }
+
+    /* Reduz o recuo das bordas para dar espaço à listagem */
+    .screen {
+        padding: 20px 15px;
+        margin: 20px auto;
+        width: 95%; 
+        border-radius: 15px;
+    }
+
+    /* AQUI ESTÁ O SEGREDO: Força os seus cards originais a ocuparem 100% da largura do celular */
+    .container-campeonatos .card-time {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+        margin-bottom: 20px;
+    }
+
+    /* Evita que as tabelas de classificação fiquem maiores que a tela */
+    table th, table td {
+        padding: 6px 4px; 
+        font-size: 13px;  
+    }
+
+    .match-box {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .modal-content {
+        padding: 20px 15px;
+        width: 95%;
+    }
+}
